@@ -2,6 +2,12 @@
 [build]
   publish = "."
 
+# Page 404 personnalisée
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+
 [[headers]]
   for = "/*"
   [headers.values]

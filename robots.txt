@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /images/site/
+
+Sitemap: https://www.ledattier.fr/sitemap.xml

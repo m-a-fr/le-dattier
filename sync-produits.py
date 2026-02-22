@@ -3,12 +3,13 @@
 sync-produits.py — Le Dattier
 Lit produits.csv et met a jour :
   1. products.js  (catalogue JS pour l'affichage)
-  2. index.html   (bloc hidden pour la validation Snipcart)
+  2. index.html   (bloc hidden pour Snipcart + JSON-LD SEO)
 
 Usage : python3 sync-produits.py
 """
 
 import csv
+import json
 import re
 import os
 
@@ -16,6 +17,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(BASE, "produits.csv")
 JS_PATH = os.path.join(BASE, "products.js")
 HTML_PATH = os.path.join(BASE, "index.html")
+SITE_URL = "https://www.ledattier.fr"
 
 
 def read_csv():
@@ -102,21 +104,87 @@ def generate_hidden_html(products):
     return "\n".join(lines)
 
 
-def update_index_html(hidden_html):
-    """Remplace le bloc hidden dans index.html."""
+def generate_jsonld_products(products):
+    """Genere le bloc JSON-LD pour le SEO produits."""
+    cat_labels = {
+        "dattes": "Dattes",
+        "savons": "Savons artisanaux",
+        "nigelle": "Huile de Nigelle"
+    }
+
+    items = []
+    for p in products:
+        item = {
+            "@type": "Product",
+            "name": p["nom"],
+            "description": p["description"],
+            "image": f'{SITE_URL}/{p["image"]}',
+            "brand": {
+                "@type": "Brand",
+                "name": "Le Dattier"
+            },
+            "category": cat_labels.get(p["categorie"], p["categorie"]),
+            "offers": {
+                "@type": "Offer",
+                "url": f'{SITE_URL}/#boutique',
+                "priceCurrency": "EUR",
+                "price": f'{p["prix"]:.2f}',
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                    "@type": "Organization",
+                    "name": "Le Dattier"
+                }
+            }
+        }
+        if p["poids"]:
+            item["weight"] = {
+                "@type": "QuantitativeValue",
+                "value": p["poids"],
+                "unitCode": "GRM"
+            }
+        items.append(item)
+
+    jsonld = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Catalogue Le Dattier",
+        "numberOfItems": len(items),
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": i + 1,
+                "item": item
+            }
+            for i, item in enumerate(items)
+        ]
+    }
+
+    return json.dumps(jsonld, ensure_ascii=False, indent=2)
+
+
+def update_index_html(hidden_html, jsonld_str):
+    """Remplace le bloc hidden et le JSON-LD produits dans index.html."""
     with open(HTML_PATH, "r", encoding="utf-8") as f:
         html = f.read()
 
-    pattern = r'  <!-- Produits cach.*?</div>'
-    replacement = hidden_html
-
-    if re.search(pattern, html, re.DOTALL):
-        html = re.sub(pattern, replacement, html, flags=re.DOTALL)
+    # 1. Remplacer bloc hidden Snipcart
+    pattern_hidden = r'  <!-- Produits cach.*?</div>'
+    if re.search(pattern_hidden, html, re.DOTALL):
+        html = re.sub(pattern_hidden, hidden_html, html, flags=re.DOTALL)
     else:
         html = html.replace(
             '<div class="products-grid" id="productsGrid"></div>',
             '<div class="products-grid" id="productsGrid"></div>\n\n' + hidden_html
         )
+
+    # 2. Remplacer ou inserer JSON-LD produits
+    jsonld_block = f'<script type="application/ld+json" id="jsonld-products">\n{jsonld_str}\n</script>'
+    pattern_jsonld = r'<script type="application/ld\+json" id="jsonld-products">.*?</script>'
+    if re.search(pattern_jsonld, html, re.DOTALL):
+        html = re.sub(pattern_jsonld, jsonld_block, html, flags=re.DOTALL)
+    else:
+        # Inserer avant </head>
+        html = html.replace('</head>', jsonld_block + '\n</head>')
 
     with open(HTML_PATH, "w", encoding="utf-8") as f:
         f.write(html)
@@ -138,10 +206,14 @@ def main():
         f.write(js_content)
     print("  OK products.js mis a jour")
 
-    print("\nMise a jour du bloc hidden dans index.html...")
+    print("\nGeneration du JSON-LD produits...")
+    jsonld_str = generate_jsonld_products(products)
+    print("  OK JSON-LD genere")
+
+    print("\nMise a jour de index.html...")
     hidden_html = generate_hidden_html(products)
-    update_index_html(hidden_html)
-    print("  OK index.html mis a jour")
+    update_index_html(hidden_html, jsonld_str)
+    print("  OK index.html mis a jour (hidden + JSON-LD)")
 
     print(f"\nSynchronisation terminee -- {len(products)} produits")
     print("  git add . && git commit -m 'maj produits' && git push")

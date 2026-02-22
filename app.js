@@ -33,7 +33,8 @@ function renderProducts(cat) {
             data-item-image="${p.img}"
             data-item-weight="${p.weight}"
             data-item-categories="${p.cat}"
-            title="Ajouter au panier">
+            title="Ajouter au panier"
+            aria-label="Ajouter ${p.name} au panier">
             +
           </button>
         </div>

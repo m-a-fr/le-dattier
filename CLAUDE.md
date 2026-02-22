@@ -1,150 +1,207 @@
 # Le Dattier — Instructions Claude Code
 
+> **Contexte complet du projet :** consulter `HISTORIQUE.md` pour l'historique des décisions,
+> la charte graphique, le catalogue produits détaillé, et la liste des tâches restantes.
+
+---
+
+## ⚠️ RÈGLE ABSOLUE — CHECKLIST PRÉ-LIVRAISON
+
+**Avant TOUTE livraison au propriétaire** (ZIP, commit, déploiement), exécuter :
+
+```bash
+python3 sync-produits.py    # Sync CSV → JS + HTML + JSON-LD
+python3 check-projet.py     # Validation cohérence + SEO
+```
+
+**Ne jamais livrer si `check-projet.py` retourne des erreurs (❌).**
+
+Les warnings (⚠️) sont tolérables mais doivent être signalés au propriétaire.
+
+### Quand lancer la checklist ?
+
+**TOUJOURS.** Même si la modification semble anodine. Même si le propriétaire
+ne demande pas de vérification. Même si la modification ne touche pas les produits.
+
+Cas typiques où un oubli peut casser le site :
+- Le propriétaire modifie le CSV mais oublie de le mentionner
+- Un changement de texte dans index.html écrase accidentellement le bloc hidden
+- Un ajout de page sans canonical / OG / favicon
+- Un produit ajouté sans image
+- Une catégorie ajoutée sans bouton filtre
+
+### Que vérifie check-projet.py ?
+
+**Cohérence produits :**
+- produits.csv ↔ products.js (même nombre, mêmes IDs)
+- produits.csv ↔ bloc hidden index.html (même nombre, mêmes prix)
+- produits.csv ↔ JSON-LD (même nombre)
+- Images produits existent (chaque chemin du CSV pointe vers un fichier réel)
+- Catégories CSV ↔ boutons filtres index.html
+- Pas de doublons d'ID dans le CSV
+
+**Conformité SEO :**
+- Chaque page HTML a : title (20-70 car.), meta description (80-165 car.), canonical, h1 unique, Open Graph, favicon, preconnect, ARIA, lang="fr"
+- Hiérarchie des headings correcte (pas de saut h1→h3)
+- Fichiers globaux présents : robots.txt, sitemap.xml, favicon.svg, 404.html
+- JSON-LD Organization + WebSite + ItemList dans index.html
+- JSON-LD FAQPage dans faq.html
+- Scripts locaux en defer
+
+### Workflow complet de livraison
+
+```
+1. Effectuer les modifications demandées
+2. Si produits touchés → python3 sync-produits.py
+3. python3 check-projet.py
+4. Si erreurs → corriger et recommencer à l'étape 3
+5. Livrer (ZIP ou git add . && git commit && git push)
+```
+
+---
+
 ## Structure du projet
 
 ```
 le-dattier-project/
 ├── produits.csv              <- SOURCE UNIQUE DES PRODUITS (modifier ici)
-├── sync-produits.py          <- Script de synchronisation (lancer apres modif CSV)
+├── sync-produits.py          <- Sync CSV → products.js + index.html + JSON-LD
+├── check-projet.py           <- Validation pré-livraison (cohérence + SEO)
 ├── index.html                <- Page d'accueil
-├── faq.html                  <- FAQ avec accordéon
+├── faq.html                  <- FAQ avec accordéon + JSON-LD FAQPage
 ├── livraison.html            <- Livraison & Retours
 ├── cgv.html                  <- Conditions Générales de Vente
 ├── mentions-legales.html     <- Mentions légales + Confidentialité
+├── 404.html                  <- Page 404 personnalisée
 ├── style.css                 <- Styles CSS (charte noir & or)
 ├── snipcart-theme.css        <- Thème Snipcart (noir & or)
-├── products.js               <- AUTO-GENERE par sync-produits.py
+├── products.js               <- AUTO-GÉNÉRÉ par sync-produits.py
 ├── app.js                    <- Logique JS (filtres, panier, animations)
-├── netlify.toml              <- Configuration Netlify
+├── favicon.svg               <- Favicon (D doré sur fond noir)
+├── robots.txt                <- Instructions crawlers
+├── sitemap.xml               <- Plan du site (5 pages)
+├── netlify.toml              <- Config Netlify (headers, cache, 404)
 ├── .gitignore
 ├── images/
-│   ├── site/                 <- Images du site (hero, histoire, etc.)
-│   │   ├── hero.jpg
-│   │   ├── story.jpg
-│   │   └── values-bg.jpg
+│   ├── site/                 <- Images du site (hero, histoire, valeurs)
 │   └── produits/             <- Photos produits (classées par catégorie)
 │       ├── dattes/
-│       │   ├── deglet-nour.jpg
-│       │   ├── medjool.jpg
-│       │   └── ...
 │       ├── savons/
-│       │   ├── alep-laurier.jpg
-│       │   └── ...
 │       └── nigelle/
-│           ├── pure.jpg
-│           └── ...
-├── CLAUDE.md                 <- Ce fichier
+├── CLAUDE.md                 <- Ce fichier (lu au démarrage par Claude Code)
+├── HISTORIQUE.md             <- Historique complet pour continuité inter-sessions
 └── README.md                 <- Guide utilisateur
 ```
 
-## Où modifier les produits
+---
 
-FICHIER SOURCE : produits.csv (seul fichier à modifier pour les produits)
-SCRIPT : sync-produits.py (génère products.js + bloc hidden index.html)
+## Gestion des produits
 
-Le fichier produits.csv est un CSV avec séparateur point-virgule (;).
-Colonnes : id;nom;origine;categorie;emoji;description;prix;unite;badge;image;poids
+### Source unique : produits.csv
 
-Après toute modification de produits.csv, lancer :
-  python3 sync-produits.py
+Seul fichier à modifier pour les produits. Tout le reste est auto-généré.
 
-Ce script met à jour automatiquement :
-1. products.js → catalogue JS pour l'affichage client
-2. index.html → bloc <div hidden> pour la validation Snipcart
+**Format :** UTF-8 avec BOM, séparateur point-virgule (;)
+**Colonnes :** id;nom;origine;categorie;description;prix;unite;badge;image;poids
 
-⚠️ NE JAMAIS modifier products.js à la main, il sera écrasé par le script.
-
-Règles pour produits.csv :
-- Encodage : UTF-8 avec BOM (compatible Excel/LibreOffice français)
-- Séparateur : point-virgule (;)
+Règles :
 - id : texte unique en kebab-case (ex: datte-medjool)
 - categorie : "dattes", "savons" ou "nigelle"
 - prix : nombre décimal avec point (ex: 18.90)
 - badge : "new", "best" ou vide
 - poids : entier en grammes
 - image : chemin relatif vers images/produits/[categorie]/[nom].jpg
-- Colonnes : id;nom;origine;categorie;description;prix;unite;badge;image;poids
 
-Chaque produit a cette structure :
+### sync-produits.py
 
-```javascript
-{
-  id: "datte-deglet-nour",   // ID unique (texte, pas de doublons)
-  name: "Deglet Nour Premium",
-  origin: "Algérie",
-  cat: "dattes",             // "dattes", "savons" ou "nigelle"
-  emoji: "🌴",
-  desc: "Description courte.",
-  price: 18.90,              // Prix en euros
-  unit: "500g",
-  badge: "best",             // "best", "new" ou ""
-  img: "images/prod-deglet.jpg",
-  weight: 520                // Poids en grammes (pour livraison)
-}
-```
+Après toute modification de produits.csv, lancer : `python3 sync-produits.py`
+
+Ce script met à jour automatiquement :
+1. **products.js** → catalogue JS pour l'affichage client
+2. **index.html bloc hidden** → validation prix par le crawler Snipcart
+3. **index.html JSON-LD** → données structurées produits pour Google
+
+⚠️ NE JAMAIS modifier products.js à la main — il sera écrasé par le script.
+
+### Commandes fréquentes
+
+**Modifier un prix ou une description :**
+1. Modifier produits.csv → 2. sync-produits.py → 3. check-projet.py → 4. git push
+
+**Ajouter un produit :**
+1. Photo dans images/produits/[categorie]/[nom].jpg (kebab-case, 600x600px min)
+2. Nouvelle ligne dans produits.csv
+3. sync-produits.py → check-projet.py → git push
+
+**Retirer un produit :**
+1. Supprimer la ligne dans produits.csv
+2. sync-produits.py → check-projet.py → git push
+
+**Ajouter une catégorie :**
+1. Créer images/produits/[nouvelle-categorie]/
+2. Ajouter les produits dans produits.csv
+3. Ajouter un bouton filter-btn dans index.html (data-cat="...")
+4. sync-produits.py → check-projet.py → git push
+
+**Ajouter une page HTML :**
+1. Créer le fichier avec le même head que les autres pages (canonical, OG, favicon, preconnect, ARIA)
+2. Ajouter l'URL dans sitemap.xml
+3. check-projet.py → git push
+
+---
+
+## SEO — Règles à respecter
+
+### Pour chaque page HTML
+- `<title>` : 20-70 caractères, mots-clés pertinents
+- `<meta name="description">` : 80-165 caractères, descriptif et accrocheur
+- `<link rel="canonical">` : URL absolue de la page
+- `<link rel="icon">` : favicon.svg
+- `<link rel="preconnect">` : fonts.googleapis.com, fonts.gstatic.com, cdn.snipcart.com
+- Open Graph : og:type, og:title, og:description, og:url, og:locale (+ og:image sur index)
+- `<html lang="fr">`
+- 1 seul `<h1>` par page
+- Hiérarchie headings : h1 → h2 → h3 (jamais de saut)
+- Au moins 1 attribut `aria-label` sur la navigation
+
+### Pour le site global
+- robots.txt : existe et pointe vers sitemap
+- sitemap.xml : contient toutes les pages publiques
+- favicon.svg : existe
+- 404.html : existe + redirect dans netlify.toml
+- JSON-LD Organization + WebSite + ItemList dans index.html
+- JSON-LD FAQPage dans faq.html
+- Scripts locaux en defer (pas de render-blocking)
+
+### Quand modifier le SEO ?
+- Ajout/suppression de page → mettre à jour sitemap.xml
+- Changement de produit → sync-produits.py régénère le JSON-LD automatiquement
+- Changement de contenu textuel → vérifier title et meta description
+- Ajout de FAQ → mettre à jour le JSON-LD FAQPage dans faq.html
+
+---
 
 ## Snipcart (e-commerce)
 
-- La clé API est dans index.html, balise `<div id="snipcart">`
-- Remplacer YOUR_API_KEY par la clé publique Snipcart
-- Chaque bouton "+" est un bouton Snipcart avec attributs data-item-*
-- Les attributs Snipcart sont générés automatiquement depuis products.js
-- Le compteur panier dans la nav utilise la classe `snipcart-items-count`
-- Le bouton panier utilise la classe `snipcart-checkout`
+- Clé API dans toutes les pages HTML : `<div id="snipcart" data-api-key="...">`
+- Le crawler Snipcart valide les prix via le bloc `<div hidden>` dans index.html
+- Les prix dans products.js, le bloc hidden ET le JSON-LD doivent être identiques
+- sync-produits.py gère cette synchronisation automatiquement
+- Le compteur panier : `.snipcart-items-count`
+- Le bouton panier : `.snipcart-checkout`
+
+---
 
 ## Catégories
 
-Définies à deux endroits (garder synchronisés) :
-1. Boutons filtres dans index.html (data-cat="...")
-2. Propriété `cat` de chaque produit dans products.js
+Définies à **trois** endroits (sync-produits.py gère 2 sur 3 automatiquement) :
+1. ✅ produits.csv → source
+2. ✅ products.js → auto-généré
+3. ⚠️ Boutons filtres dans index.html → **à ajouter manuellement** si nouvelle catégorie
 
-Catégories actuelles : "dattes", "savons", "nigelle"
+---
 
-## Commandes fréquentes
-
-### Modifier un prix ou une description
-1. Ouvrir produits.csv (Excel, LibreOffice ou éditeur de texte)
-2. Modifier la valeur souhaitée
-3. Sauvegarder le fichier
-4. Lancer : python3 sync-produits.py
-5. Déployer : git add . && git commit -m "maj prix" && git push
-
-### Ajouter un nouveau produit
-1. Placer la photo dans images/produits/[categorie]/[nom].jpg
-   Nommer le fichier en kebab-case, sans accents (ex: miel-sidr.jpg)
-   Format recommandé : JPG, 600x600px minimum, fond neutre
-2. Ajouter une ligne dans produits.csv avec le chemin de l'image
-   Exemple : nouveau-produit;Mon Produit;France;dattes;Description;15.90;250g;new;images/produits/dattes/miel-sidr.jpg;300
-3. Lancer : python3 sync-produits.py
-4. Déployer : git add . && git commit -m "ajout produit" && git push
-
-### Retirer un produit
-1. Supprimer la ligne dans produits.csv
-2. Optionnel : supprimer l'image dans images/produits/[categorie]/
-3. Lancer : python3 sync-produits.py
-4. Déployer : git add . && git commit -m "retrait produit" && git push
-
-### Remplacer une photo produit
-1. Remplacer le fichier dans images/produits/[categorie]/ (garder le même nom)
-2. Déployer : git add . && git commit -m "maj photo" && git push
-   Pas besoin de lancer sync-produits.py si le nom du fichier ne change pas
-
-### Ajouter une catégorie
-1. Créer le sous-dossier : images/produits/[nouvelle-categorie]/
-2. Y placer les photos
-3. Ajouter les produits dans produits.csv avec la nouvelle catégorie
-4. Ajouter un bouton filter-btn dans index.html
-5. Lancer : python3 sync-produits.py
-6. Déployer
-
-## Images
-
-- Produits : 600x600px recommandé, format carré
-- Hero : 1600x900px
-- Story : 800x1067px (portrait 3:4)
-- Formats : JPG, PNG, WebP
-
-## Déploiement (via GitHub)
+## Déploiement
 
 ```bash
 git add .
@@ -152,28 +209,40 @@ git commit -m "description de la modification"
 git push
 ```
 
-Netlify détecte automatiquement le push et déploie le site.
+Netlify détecte automatiquement le push et déploie en ~30 secondes.
+
+---
 
 ## Pages intérieures
 
-Les pages FAQ, Livraison, CGV et Mentions légales partagent :
-- Le même style.css
-- La même nav (avec liens vers index.html#section)
-- Le même footer (avec liens vers toutes les pages)
-- Snipcart (le panier fonctionne sur toutes les pages)
+Toutes partagent : style.css, snipcart-theme.css, même nav, même footer, Snipcart.
 
-Classes CSS pour les pages intérieures :
-- .page-header : en-tête avec titre et lien retour
-- .page-content : contenu principal (max-width 820px)
-- .faq-item / .faq-question / .faq-answer : accordéon FAQ
-- .back-home : lien "← Retour à l'accueil"
+Classes CSS :
+- `.page-header` : en-tête avec titre et lien retour
+- `.page-content` : contenu principal (max-width 820px)
+- `.page-content h2` : sous-titres de section
+- `.faq-item / .faq-question / .faq-answer` : accordéon FAQ
+- `.back-home` : lien "← Retour à l'accueil"
 
 Les CGV et Mentions légales contiennent des [CROCHETS] à remplacer
 par les vraies informations de l'entreprise.
 
-## Notes
+---
 
-- Snipcart valide les prix en crawlant la page HTML
-- Les prix dans products.js sont la source de vérité
+## Images
+
+- Produits : 600x600px recommandé, format carré
+- Hero : 1600x900px
+- Story : 800x1067px (portrait 3:4)
+- Formats : JPG, PNG, WebP
+- Nommage : kebab-case, sans accents (ex: savon-alep-laurier.jpg)
+- Emplacement : images/produits/[categorie]/[nom].jpg
+
+---
+
+## Notes techniques
+
+- Snipcart valide les prix en crawlant la page HTML → bloc hidden obligatoire
 - data-item-url="/" dans app.js pointe vers la page d'accueil
 - Le site est responsive (breakpoint à 900px)
+- Les h4 du footer sont acceptables (hors hiérarchie du contenu principal)
