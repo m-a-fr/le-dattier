@@ -1,0 +1,312 @@
+/* ============================================================
+   SNIPCART THEME — LE DATTIER
+   Charte noir & or appliquée au panier et checkout Snipcart
+   ============================================================ */
+
+#snipcart {
+  /* -----------------
+      FONTS
+  ----------------- */
+  font-family: 'Jost', sans-serif;
+
+  /* -----------------
+      GLOBAL COLORS
+  ----------------- */
+  --color-default: #E0D9CD;
+  --color-alt: #9B917F;
+  --color-icon: #D4B472;
+  --color-success: #7FA55A;
+  --color-error: #C45B5B;
+
+  --borderColor-default: rgba(212, 180, 114, 0.12);
+  --bgColor-default: #0E0D0B;
+  --bgColor-alt: #161412;
+
+  --bgColor-success: rgba(127, 165, 90, 0.12);
+  --color-error: #C45B5B;
+  --borderColor-error: #C45B5B;
+  --bgColor-error: rgba(196, 91, 91, 0.08);
+  --bgColor-info: rgba(212, 180, 114, 0.08);
+
+  /* Modal */
+  --bgColor-modal: #0E0D0B;
+  --bgColor-modalVeil: rgba(0, 0, 0, 0.75);
+
+  /* -----------------
+      LINKS
+  ----------------- */
+  --color-link: #D4B472;
+  --color-link-hover: #E8D9B5;
+  --color-link-active: #D4B472;
+  --color-link-focus: #D4B472;
+  --borderColor-link: transparent;
+  --borderColor-link-hover: transparent;
+  --borderColor-link-active: transparent;
+  --borderColor-link-focus: transparent;
+  --bgColor-link: transparent;
+  --bgColor-link-hover: transparent;
+  --bgColor-link-active: transparent;
+  --bgColor-link-focus: transparent;
+  --shadow-link-focus: 0 0 0 2px rgba(212, 180, 114, 0.25);
+
+  /* -----------------
+      BUTTON PRIMARY (Commander, Continuer, etc.)
+  ----------------- */
+  --color-buttonPrimary: #080807;
+  --color-buttonPrimary-hover: #080807;
+  --color-buttonPrimary-active: #080807;
+  --color-buttonPrimary-focus: #080807;
+  --color-buttonPrimary-disabled: #9B917F;
+  --color-buttonPrimary-success: #080807;
+  --color-buttonPrimary-error: #FBF8F2;
+
+  --borderColor-buttonPrimary: #D4B472;
+  --borderColor-buttonPrimary-hover: #E8D9B5;
+  --borderColor-buttonPrimary-active: #D4B472;
+  --borderColor-buttonPrimary-focus: #D4B472;
+  --borderColor-buttonPrimary-disabled: rgba(212, 180, 114, 0.2);
+  --borderColor-buttonPrimary-success: #7FA55A;
+  --borderColor-buttonPrimary-error: #C45B5B;
+
+  --bgColor-buttonPrimary: #D4B472;
+  --bgColor-buttonPrimary-hover: #E8D9B5;
+  --bgColor-buttonPrimary-active: #C9A96E;
+  --bgColor-buttonPrimary-focus: #D4B472;
+  --bgColor-buttonPrimary-disabled: rgba(212, 180, 114, 0.1);
+  --bgColor-buttonPrimary-success: #7FA55A;
+  --bgColor-buttonPrimary-error: #C45B5B;
+
+  --shadow-buttonPrimary-hover: 0 4px 16px rgba(212, 180, 114, 0.2);
+  --shadow-buttonPrimary-active: none;
+  --shadow-buttonPrimary-focus: 0 0 0 3px rgba(212, 180, 114, 0.3);
+
+  /* -----------------
+      BUTTON SECONDARY (Modifier, Retour, etc.)
+  ----------------- */
+  --color-buttonSecondary: #D4B472;
+  --color-buttonSecondary-hover: #E8D9B5;
+  --color-buttonSecondary-active: #D4B472;
+  --color-buttonSecondary-focus: #D4B472;
+  --color-buttonSecondary-disabled: #9B917F;
+  --color-buttonSecondary-success: #7FA55A;
+  --color-buttonSecondary-error: #C45B5B;
+
+  --borderColor-buttonSecondary: rgba(212, 180, 114, 0.3);
+  --borderColor-buttonSecondary-hover: #D4B472;
+  --borderColor-buttonSecondary-active: #D4B472;
+  --borderColor-buttonSecondary-focus: #D4B472;
+  --borderColor-buttonSecondary-disabled: rgba(212, 180, 114, 0.1);
+  --borderColor-buttonSecondary-success: #7FA55A;
+  --borderColor-buttonSecondary-error: #C45B5B;
+
+  --bgColor-buttonSecondary: transparent;
+  --bgColor-buttonSecondary-hover: rgba(212, 180, 114, 0.08);
+  --bgColor-buttonSecondary-active: rgba(212, 180, 114, 0.05);
+  --bgColor-buttonSecondary-focus: transparent;
+  --bgColor-buttonSecondary-disabled: transparent;
+  --bgColor-buttonSecondary-success: rgba(127, 165, 90, 0.1);
+  --bgColor-buttonSecondary-error: rgba(196, 91, 91, 0.1);
+
+  --shadow-buttonSecondary-hover: none;
+  --shadow-buttonSecondary-active: none;
+  --shadow-buttonSecondary-focus: 0 0 0 3px rgba(212, 180, 114, 0.2);
+
+  /* -----------------
+      BUTTON DANGER (Supprimer)
+  ----------------- */
+  --color-buttonDanger: #C45B5B;
+  --color-buttonDanger-hover: #D47272;
+  --color-buttonDanger-active: #C45B5B;
+  --color-buttonDanger-focus: #C45B5B;
+  --color-buttonDanger-disabled: #9B917F;
+  --color-buttonDanger-success: #7FA55A;
+  --color-buttonDanger-error: #C45B5B;
+
+  --borderColor-buttonDanger: rgba(196, 91, 91, 0.3);
+  --borderColor-buttonDanger-hover: #C45B5B;
+  --borderColor-buttonDanger-active: #C45B5B;
+  --borderColor-buttonDanger-focus: #C45B5B;
+  --borderColor-buttonDanger-disabled: rgba(196, 91, 91, 0.1);
+
+  --bgColor-buttonDanger: transparent;
+  --bgColor-buttonDanger-hover: rgba(196, 91, 91, 0.08);
+  --bgColor-buttonDanger-active: rgba(196, 91, 91, 0.05);
+  --bgColor-buttonDanger-focus: transparent;
+  --bgColor-buttonDanger-disabled: transparent;
+
+  --shadow-buttonDanger-focus: 0 0 0 3px rgba(196, 91, 91, 0.2);
+
+  /* -----------------
+      INPUTS (Formulaires de checkout)
+  ----------------- */
+  --color-input: #E0D9CD;
+  --color-input-hover: #E0D9CD;
+  --color-input-focus: #FBF8F2;
+  --color-input-checked: #FBF8F2;
+  --color-input-disabled: #9B917F;
+  --color-input-error: #C45B5B;
+
+  --borderColor-input: rgba(212, 180, 114, 0.2);
+  --borderColor-input-hover: rgba(212, 180, 114, 0.35);
+  --borderColor-input-focus: #D4B472;
+  --borderColor-input-checked: #D4B472;
+  --borderColor-input-disabled: rgba(212, 180, 114, 0.08);
+  --borderColor-input-error: #C45B5B;
+
+  --bgColor-input: rgba(212, 180, 114, 0.04);
+  --bgColor-input-hover: rgba(212, 180, 114, 0.06);
+  --bgColor-input-focus: rgba(212, 180, 114, 0.08);
+  --bgColor-input-checked: rgba(212, 180, 114, 0.08);
+  --bgColor-input-disabled: rgba(212, 180, 114, 0.02);
+  --bgColor-input-error: rgba(196, 91, 91, 0.06);
+  --bgColor-input-autofill: rgba(212, 180, 114, 0.08);
+
+  --shadow-input-hover: none;
+  --shadow-input-focus: 0 0 0 3px rgba(212, 180, 114, 0.15);
+  --shadow-input-checked: none;
+
+  --color-inputLabel: #C4BAA9;
+  --color-inputLabel-hover: #E0D9CD;
+  --color-inputLabel-focus: #D4B472;
+
+  --color-inputIcon: #9B917F;
+  --color-inputIcon-hover: #D4B472;
+  --color-inputIcon-focus: #D4B472;
+  --color-inputIcon-checked: #D4B472;
+  --color-inputIcon-error: #C45B5B;
+
+  --color-inputPlaceholder: rgba(196, 186, 169, 0.45);
+
+  /* -----------------
+      BADGES (Étapes du checkout)
+  ----------------- */
+  --color-badge: #080807;
+  --color-badge-active: #080807;
+  --color-badge-disabled: #9B917F;
+
+  --borderColor-badge: #D4B472;
+  --borderColor-badge-active: #D4B472;
+  --borderColor-badge-disabled: rgba(212, 180, 114, 0.15);
+
+  --bgColor-badge: #D4B472;
+  --bgColor-badge-active: #E8D9B5;
+  --bgColor-badge-disabled: transparent;
+}
+
+/* -----------------
+    TYPOGRAPHY OVERRIDES
+----------------- */
+#snipcart .snipcart__font--subtitle,
+#snipcart .snipcart-cart-header__title,
+#snipcart .snipcart-item-line__title,
+#snipcart .snipcart-order__title {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* -----------------
+    LAYOUT REFINEMENTS
+----------------- */
+
+/* Cart container */
+#snipcart .snipcart-modal__container {
+  background: #0E0D0B;
+}
+
+/* Cart header */
+#snipcart .snipcart-cart-header {
+  border-bottom: 1px solid rgba(212, 180, 114, 0.1);
+}
+
+/* Close button */
+#snipcart .snipcart-modal__close {
+  color: #C4BAA9;
+}
+#snipcart .snipcart-modal__close:hover {
+  color: #D4B472;
+}
+
+/* Item lines */
+#snipcart .snipcart-item-line {
+  border-bottom: 1px solid rgba(212, 180, 114, 0.06);
+}
+
+/* Item quantity */
+#snipcart .snipcart-item-quantity__quantity {
+  color: #E0D9CD;
+}
+
+/* Price */
+#snipcart .snipcart-item-line__title {
+  color: #FBF8F2;
+}
+
+/* Total section */
+#snipcart .snipcart-cart-summary-fees__amount,
+#snipcart .snipcart-cart-summary-fees__notice {
+  color: #D4B472;
+}
+
+/* Checkout steps boxes */
+#snipcart .snipcart__box {
+  border: 1px solid rgba(212, 180, 114, 0.08);
+  background: rgba(212, 180, 114, 0.02);
+}
+#snipcart .snipcart__box--header {
+  border-bottom: 1px solid rgba(212, 180, 114, 0.06);
+}
+
+/* Footer area */
+#snipcart .snipcart-cart-button--highlight {
+  font-family: 'Jost', sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+/* Discount box */
+#snipcart .snipcart-discount-box__button {
+  color: #D4B472;
+  border-color: rgba(212, 180, 114, 0.3);
+}
+#snipcart .snipcart-discount-box__button:hover {
+  background: rgba(212, 180, 114, 0.08);
+}
+
+/* Empty cart state */
+#snipcart .snipcart-empty-cart__title {
+  font-family: 'Cormorant Garamond', serif;
+  color: #E0D9CD;
+}
+
+/* Scrollbar (Webkit) */
+#snipcart ::-webkit-scrollbar {
+  width: 6px;
+}
+#snipcart ::-webkit-scrollbar-track {
+  background: #0E0D0B;
+}
+#snipcart ::-webkit-scrollbar-thumb {
+  background: rgba(212, 180, 114, 0.2);
+  border-radius: 3px;
+}
+#snipcart ::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 180, 114, 0.35);
+}
+
+/* Feature section (shipping, billing completed) */
+#snipcart .snipcart-featured-payment-methods__list {
+  border-top: 1px solid rgba(212, 180, 114, 0.06);
+}
+
+/* Checkbox and radio labels */
+#snipcart .snipcart__checkbox + label,
+#snipcart .snipcart-shipping-rates-list-item {
+  color: #E0D9CD;
+}
+
+/* Loading indicator */
+#snipcart .snipcart__loading-overlay {
+  background: rgba(14, 13, 11, 0.85);
+}
