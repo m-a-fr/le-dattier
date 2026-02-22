@@ -4,22 +4,37 @@
 
 ```
 le-dattier-project/
-├── produits.csv          ← 🔴 SOURCE UNIQUE DES PRODUITS (modifier ici)
-├── sync-produits.py      ← Script de synchronisation (lancer après modif CSV)
-├── index.html            ← Page d'accueil (hero, boutique, histoire, engagements)
-├── faq.html              ← Page FAQ avec accordéon
-├── livraison.html        ← Livraison & Retours
-├── cgv.html              ← Conditions Générales de Vente
-├── mentions-legales.html ← Mentions légales + Politique de confidentialité
-├── style.css             ← Styles CSS (charte noir & or, partagés)
-├── snipcart-theme.css    ← Thème Snipcart (noir & or)
-├── products.js           ← ⚠️ AUTO-GÉNÉRÉ par sync-produits.py
-├── app.js                ← Logique JS (filtres, panier, animations)
-├── netlify.toml          ← Configuration Netlify
-├── .gitignore            ← Fichiers exclus de Git
-├── images/               ← Photos produits (à remplacer par vraies photos)
-├── CLAUDE.md             ← Ce fichier (instructions pour Claude Code)
-└── README.md             ← Guide utilisateur
+├── produits.csv              <- SOURCE UNIQUE DES PRODUITS (modifier ici)
+├── sync-produits.py          <- Script de synchronisation (lancer apres modif CSV)
+├── index.html                <- Page d'accueil
+├── faq.html                  <- FAQ avec accordéon
+├── livraison.html            <- Livraison & Retours
+├── cgv.html                  <- Conditions Générales de Vente
+├── mentions-legales.html     <- Mentions légales + Confidentialité
+├── style.css                 <- Styles CSS (charte noir & or)
+├── snipcart-theme.css        <- Thème Snipcart (noir & or)
+├── products.js               <- AUTO-GENERE par sync-produits.py
+├── app.js                    <- Logique JS (filtres, panier, animations)
+├── netlify.toml              <- Configuration Netlify
+├── .gitignore
+├── images/
+│   ├── site/                 <- Images du site (hero, histoire, etc.)
+│   │   ├── hero.jpg
+│   │   ├── story.jpg
+│   │   └── values-bg.jpg
+│   └── produits/             <- Photos produits (classées par catégorie)
+│       ├── dattes/
+│       │   ├── deglet-nour.jpg
+│       │   ├── medjool.jpg
+│       │   └── ...
+│       ├── savons/
+│       │   ├── alep-laurier.jpg
+│       │   └── ...
+│       └── nigelle/
+│           ├── pure.jpg
+│           └── ...
+├── CLAUDE.md                 <- Ce fichier
+└── README.md                 <- Guide utilisateur
 ```
 
 ## Où modifier les produits
@@ -47,7 +62,7 @@ Règles pour produits.csv :
 - prix : nombre décimal avec point (ex: 18.90)
 - badge : "new", "best" ou vide
 - poids : entier en grammes
-- image : chemin relatif (ex: images/prod-medjool.jpg)
+- image : chemin relatif vers images/produits/[categorie]/[nom].jpg
 - Colonnes : id;nom;origine;categorie;description;prix;unite;badge;image;poids
 
 Chaque produit a cette structure :
@@ -87,20 +102,40 @@ Catégories actuelles : "dattes", "savons", "nigelle"
 
 ## Commandes fréquentes
 
-Modifier un prix :
-  Modifier la colonne prix dans produits.csv, puis lancer python3 sync-produits.py
+### Modifier un prix ou une description
+1. Ouvrir produits.csv (Excel, LibreOffice ou éditeur de texte)
+2. Modifier la valeur souhaitée
+3. Sauvegarder le fichier
+4. Lancer : python3 sync-produits.py
+5. Déployer : git add . && git commit -m "maj prix" && git push
 
-Ajouter un produit :
-  Ajouter une ligne dans produits.csv, puis lancer python3 sync-produits.py
-  L'id doit être unique et en kebab-case
+### Ajouter un nouveau produit
+1. Placer la photo dans images/produits/[categorie]/[nom].jpg
+   Nommer le fichier en kebab-case, sans accents (ex: miel-sidr.jpg)
+   Format recommandé : JPG, 600x600px minimum, fond neutre
+2. Ajouter une ligne dans produits.csv avec le chemin de l'image
+   Exemple : nouveau-produit;Mon Produit;France;dattes;Description;15.90;250g;new;images/produits/dattes/miel-sidr.jpg;300
+3. Lancer : python3 sync-produits.py
+4. Déployer : git add . && git commit -m "ajout produit" && git push
 
-Retirer un produit :
-  Supprimer la ligne dans produits.csv, puis lancer python3 sync-produits.py
+### Retirer un produit
+1. Supprimer la ligne dans produits.csv
+2. Optionnel : supprimer l'image dans images/produits/[categorie]/
+3. Lancer : python3 sync-produits.py
+4. Déployer : git add . && git commit -m "retrait produit" && git push
 
-Ajouter une catégorie :
-  1. Utiliser le nouveau nom de catégorie dans produits.csv
-  2. Ajouter un bouton filter-btn dans index.html
-  3. Lancer python3 sync-produits.py
+### Remplacer une photo produit
+1. Remplacer le fichier dans images/produits/[categorie]/ (garder le même nom)
+2. Déployer : git add . && git commit -m "maj photo" && git push
+   Pas besoin de lancer sync-produits.py si le nom du fichier ne change pas
+
+### Ajouter une catégorie
+1. Créer le sous-dossier : images/produits/[nouvelle-categorie]/
+2. Y placer les photos
+3. Ajouter les produits dans produits.csv avec la nouvelle catégorie
+4. Ajouter un bouton filter-btn dans index.html
+5. Lancer : python3 sync-produits.py
+6. Déployer
 
 ## Images
 

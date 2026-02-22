@@ -15,7 +15,7 @@ const products = [
     price: 18.90,
     unit: "500g",
     badge: "best",
-    img: "images/prod-deglet.jpg",
+    img: "images/produits/dattes/deglet-nour.jpg",
     weight: 520
   },
 
@@ -28,7 +28,7 @@ const products = [
     price: 24.50,
     unit: "500g",
     badge: "new",
-    img: "images/prod-medjool.jpg",
+    img: "images/produits/dattes/medjool.jpg",
     weight: 520
   },
 
@@ -41,7 +41,7 @@ const products = [
     price: 32.00,
     unit: "400g",
     badge: "",
-    img: "images/prod-ajwa.jpg",
+    img: "images/produits/dattes/ajwa.jpg",
     weight: 420
   },
 
@@ -54,7 +54,7 @@ const products = [
     price: 28.00,
     unit: "400g",
     badge: "",
-    img: "images/prod-sukari.jpg",
+    img: "images/produits/dattes/sukari.jpg",
     weight: 420
   },
 
@@ -67,7 +67,7 @@ const products = [
     price: 19.90,
     unit: "500g",
     badge: "",
-    img: "images/prod-mazafati.jpg",
+    img: "images/produits/dattes/mazafati.jpg",
     weight: 520
   },
 
@@ -80,7 +80,7 @@ const products = [
     price: 45.00,
     unit: "coffret",
     badge: "new",
-    img: "images/prod-coffret-dattes.jpg",
+    img: "images/produits/dattes/coffret.jpg",
     weight: 800
   },
   // SAVONS
@@ -94,7 +94,7 @@ const products = [
     price: 12.90,
     unit: "200g",
     badge: "best",
-    img: "images/prod-savon-laurier.jpg",
+    img: "images/produits/savons/alep-laurier.jpg",
     weight: 220
   },
 
@@ -107,7 +107,7 @@ const products = [
     price: 9.90,
     unit: "150g",
     badge: "",
-    img: "images/prod-savon-nigelle.jpg",
+    img: "images/produits/savons/nigelle.jpg",
     weight: 170
   },
 
@@ -120,7 +120,7 @@ const products = [
     price: 11.50,
     unit: "150g",
     badge: "new",
-    img: "images/prod-savon-rose.jpg",
+    img: "images/produits/savons/rose.jpg",
     weight: 170
   },
 
@@ -133,7 +133,7 @@ const products = [
     price: 8.90,
     unit: "120g",
     badge: "",
-    img: "images/prod-savon-olive.jpg",
+    img: "images/produits/savons/olive.jpg",
     weight: 140
   },
   // NIGELLE
@@ -147,7 +147,7 @@ const products = [
     price: 16.90,
     unit: "100ml",
     badge: "best",
-    img: "images/prod-nigelle-pure.jpg",
+    img: "images/produits/nigelle/pure.jpg",
     weight: 150
   },
 
@@ -160,7 +160,7 @@ const products = [
     price: 22.50,
     unit: "100ml",
     badge: "new",
-    img: "images/prod-nigelle-bio.jpg",
+    img: "images/produits/nigelle/bio.jpg",
     weight: 150
   },
 
@@ -173,7 +173,7 @@ const products = [
     price: 18.90,
     unit: "60 caps",
     badge: "",
-    img: "images/prod-nigelle-capsules.jpg",
+    img: "images/produits/nigelle/capsules.jpg",
     weight: 100
   },
 
@@ -186,7 +186,7 @@ const products = [
     price: 39.90,
     unit: "coffret",
     badge: "",
-    img: "images/prod-coffret-nigelle.jpg",
+    img: "images/produits/nigelle/coffret.jpg",
     weight: 500
   },
 ];
