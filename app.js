@@ -72,18 +72,8 @@ document.addEventListener('snipcart.ready', () => {
     showToast(`${item.name} ajouté au panier`);
   });
 
-  // Flèche retour mobile : apparaît à gauche du logo quand le panier est ouvert
-  const navbar = document.getElementById('navbar');
-  const navBack = document.getElementById('navBack');
-
-  Snipcart.events.on('cart.opened', () => {
-    navbar.classList.add('cart-open');
-  });
-  Snipcart.events.on('cart.closed', () => {
-    navbar.classList.remove('cart-open');
-  });
-
-  navBack.addEventListener('click', () => {
+  // Flèche retour mobile : ferme le panier au clic
+  document.getElementById('navBack').addEventListener('click', () => {
     Snipcart.api.theme.cart.close();
   });
 });
