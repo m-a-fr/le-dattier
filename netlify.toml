@@ -1,7 +1,11 @@
 # Configuration Netlify pour Le Dattier
 [build]
   publish = "."
-  command = "python3 sync-produits.py"
+  command = "python3 sync-produits.py && echo 'BUILD OK — produits synchronises'"
+
+# Forcer Python 3
+[build.environment]
+  PYTHON_VERSION = "3.8"
 
 # Page 404 personnalisée
 [[redirects]]
@@ -25,7 +29,14 @@
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
+# JS statique (app.js) — cache long
 [[headers]]
-  for = "/*.js"
+  for = "/app.js"
   [headers.values]
     Cache-Control = "public, max-age=604800"
+
+# JS dynamique (products.js) — pas de cache navigateur, CDN gère
+[[headers]]
+  for = "/products.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
