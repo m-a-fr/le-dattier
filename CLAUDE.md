@@ -4,34 +4,51 @@
 
 ```
 le-dattier-project/
-├── index.html           ← Page d'accueil (hero, boutique, histoire, engagements)
-├── faq.html             ← Page FAQ avec accordéon
-├── livraison.html       ← Livraison & Retours
-├── cgv.html             ← Conditions Générales de Vente
-├── mentions-legales.html← Mentions légales + Politique de confidentialité
-├── style.css            ← Styles CSS (charte noir & or, partagés)
-├── products.js          ← CATALOGUE PRODUITS (modifier ici les produits/prix)
-├── app.js               ← Logique JS (filtres, panier, animations)
-├── netlify.toml         ← Configuration Netlify
-├── .gitignore           ← Fichiers exclus de Git
-├── images/              ← Photos produits (à remplacer par vraies photos)
-├── CLAUDE.md            ← Ce fichier (instructions pour Claude Code)
-└── README.md            ← Guide utilisateur
+├── produits.csv          ← 🔴 SOURCE UNIQUE DES PRODUITS (modifier ici)
+├── sync-produits.py      ← Script de synchronisation (lancer après modif CSV)
+├── index.html            ← Page d'accueil (hero, boutique, histoire, engagements)
+├── faq.html              ← Page FAQ avec accordéon
+├── livraison.html        ← Livraison & Retours
+├── cgv.html              ← Conditions Générales de Vente
+├── mentions-legales.html ← Mentions légales + Politique de confidentialité
+├── style.css             ← Styles CSS (charte noir & or, partagés)
+├── snipcart-theme.css    ← Thème Snipcart (noir & or)
+├── products.js           ← ⚠️ AUTO-GÉNÉRÉ par sync-produits.py
+├── app.js                ← Logique JS (filtres, panier, animations)
+├── netlify.toml          ← Configuration Netlify
+├── .gitignore            ← Fichiers exclus de Git
+├── images/               ← Photos produits (à remplacer par vraies photos)
+├── CLAUDE.md             ← Ce fichier (instructions pour Claude Code)
+└── README.md             ← Guide utilisateur
 ```
 
 ## Où modifier les produits
 
-FICHIER PRINCIPAL : products.js
-FICHIER SECONDAIRE : index.html (section hidden pour le crawler Snipcart)
+FICHIER SOURCE : produits.csv (seul fichier à modifier pour les produits)
+SCRIPT : sync-produits.py (génère products.js + bloc hidden index.html)
 
-⚠️ IMPORTANT : Les produits sont définis à DEUX endroits :
-1. products.js → affiché au client (rendu par app.js)
-2. index.html → bloc <div hidden> avec des boutons snipcart-add-item
-   (utilisé par le crawler Snipcart pour valider les prix)
+Le fichier produits.csv est un CSV avec séparateur point-virgule (;).
+Colonnes : id;nom;origine;categorie;emoji;description;prix;unite;badge;image;poids
 
-Quand on modifie un prix, un nom, ou qu'on ajoute/retire un produit,
-il faut TOUJOURS modifier les deux fichiers pour qu'ils restent synchronisés.
-Sinon Snipcart refuse la commande ("le prix a changé").
+Après toute modification de produits.csv, lancer :
+  python3 sync-produits.py
+
+Ce script met à jour automatiquement :
+1. products.js → catalogue JS pour l'affichage client
+2. index.html → bloc <div hidden> pour la validation Snipcart
+
+⚠️ NE JAMAIS modifier products.js à la main, il sera écrasé par le script.
+
+Règles pour produits.csv :
+- Encodage : UTF-8 avec BOM (compatible Excel/LibreOffice français)
+- Séparateur : point-virgule (;)
+- id : texte unique en kebab-case (ex: datte-medjool)
+- categorie : "dattes", "savons" ou "nigelle"
+- prix : nombre décimal avec point (ex: 18.90)
+- badge : "new", "best" ou vide
+- poids : entier en grammes
+- image : chemin relatif (ex: images/prod-medjool.jpg)
+- Colonnes : id;nom;origine;categorie;description;prix;unite;badge;image;poids
 
 Chaque produit a cette structure :
 
@@ -71,18 +88,19 @@ Catégories actuelles : "dattes", "savons", "nigelle"
 ## Commandes fréquentes
 
 Modifier un prix :
-  Modifier price dans products.js pour le produit concerné
+  Modifier la colonne prix dans produits.csv, puis lancer python3 sync-produits.py
 
 Ajouter un produit :
-  Ajouter un objet au tableau products dans products.js
+  Ajouter une ligne dans produits.csv, puis lancer python3 sync-produits.py
   L'id doit être unique et en kebab-case
 
 Retirer un produit :
-  Supprimer l'objet correspondant dans products.js
+  Supprimer la ligne dans produits.csv, puis lancer python3 sync-produits.py
 
 Ajouter une catégorie :
-  1. Ajouter un bouton filter-btn dans index.html
-  2. Utiliser la même valeur cat dans les nouveaux produits
+  1. Utiliser le nouveau nom de catégorie dans produits.csv
+  2. Ajouter un bouton filter-btn dans index.html
+  3. Lancer python3 sync-produits.py
 
 ## Images
 

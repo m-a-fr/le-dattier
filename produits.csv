@@ -1,0 +1,15 @@
+﻿id;nom;origine;categorie;description;prix;unite;badge;image;poids
+datte-deglet-nour;Deglet Nour Premium;Algérie;dattes;La reine des dattes. Texture fondante, notes de miel et de caramel.;18.90;500g;best;images/prod-deglet.jpg;520
+datte-medjool;Medjool Royale;Palestine;dattes;Charnue et généreuse, aux saveurs de caramel beurré. Un pur délice.;24.50;500g;new;images/prod-medjool.jpg;520
+datte-ajwa;Ajwa de Médine;Arabie Saoudite;dattes;La datte sacrée. Saveur intense, légèrement boisée et sucrée.;32.00;400g;;images/prod-ajwa.jpg;420
+datte-sukari;Sukari d'Al-Qassim;Arabie Saoudite;dattes;Douce et croustillante, au goût de sucre d'orge. Rare et précieuse.;28.00;400g;;images/prod-sukari.jpg;420
+datte-mazafati;Mazafati de Bam;Iran;dattes;Moelleuse et juteuse. Un fondant exceptionnel aux notes de chocolat.;19.90;500g;;images/prod-mazafati.jpg;520
+datte-coffret;Coffret Découverte Dattes;Multi-origines;dattes;5 variétés d'exception réunies dans un coffret cadeau élégant.;45.00;coffret;new;images/prod-coffret-dattes.jpg;800
+savon-alep-laurier;Savon d'Alep au Laurier;Syrie;savons;40% huile de laurier. Saponifié à froid selon la tradition millénaire d'Alep.;12.90;200g;best;images/prod-savon-laurier.jpg;220
+savon-nigelle;Savon Noir à la Nigelle;Maroc;savons;Enrichi en huile de nigelle. Purifiant et nourrissant pour la peau.;9.90;150g;;images/prod-savon-nigelle.jpg;170
+savon-rose;Savon à la Rose de Damas;Turquie;savons;À l'eau de rose de Damas. Hydratant et délicatement parfumé.;11.50;150g;new;images/prod-savon-rose.jpg;170
+savon-olive;Savon à l'Huile d'Olive;Palestine;savons;100% huile d'olive extra vierge. Le savon ancestral de Naplouse.;8.90;120g;;images/prod-savon-olive.jpg;140
+nigelle-pure;Huile de Nigelle Pure;Égypte;nigelle;Première pression à froid. Graines de Nigella Sativa d'Égypte.;16.90;100ml;best;images/prod-nigelle-pure.jpg;150
+nigelle-bio;Huile de Nigelle Bio;Éthiopie;nigelle;Certifiée bio. Issue de graines éthiopiennes réputées pour leur pureté.;22.50;100ml;new;images/prod-nigelle-bio.jpg;150
+nigelle-capsules;Capsules de Nigelle;Égypte;nigelle;60 capsules d'huile de nigelle pure. Cure de bien-être quotidienne.;18.90;60 caps;;images/prod-nigelle-capsules.jpg;100
+nigelle-coffret;Coffret Nigelle Prestige;Égypte;nigelle;Huile pure 100ml + capsules 60 + savon nigelle. Le rituel complet.;39.90;coffret;;images/prod-coffret-nigelle.jpg;500

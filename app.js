@@ -16,7 +16,6 @@ function renderProducts(cat) {
       <div class="product-image">
         <img src="${p.img}" alt="${p.name}" loading="lazy">
         ${p.badge ? `<span class="product-badge ${p.badge === 'new' ? 'badge-new' : 'badge-best'}">${p.badge === 'new' ? 'Nouveau' : 'Best-seller'}</span>` : ''}
-        <span class="product-emoji">${p.emoji}</span>
       </div>
       <div class="product-info">
         <p class="product-origin">${p.origin}</p>
