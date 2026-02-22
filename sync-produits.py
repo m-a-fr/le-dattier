@@ -13,6 +13,7 @@ Source : produits.json (edite via Decap CMS ou manuellement)
 import json
 import re
 import os
+import hashlib
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(BASE, "produits.json")
@@ -166,8 +167,8 @@ def generate_jsonld_products(products):
     return json.dumps(jsonld, ensure_ascii=False, indent=2)
 
 
-def update_index_html(hidden_html, jsonld_str):
-    """Remplace le bloc hidden et le JSON-LD produits dans index.html."""
+def update_index_html(hidden_html, jsonld_str, js_hash):
+    """Remplace le bloc hidden, le JSON-LD produits et le cache bust dans index.html."""
     with open(HTML_PATH, "r", encoding="utf-8") as f:
         html = f.read()
 
@@ -189,6 +190,13 @@ def update_index_html(hidden_html, jsonld_str):
     else:
         html = html.replace('</head>', jsonld_block + '\n</head>')
 
+    # 3. Cache busting : mettre a jour le hash dans l'URL de products.js
+    html = re.sub(
+        r'products\.js(\?v=[a-f0-9]+)?',
+        f'products.js?v={js_hash}',
+        html
+    )
+
     with open(HTML_PATH, "w", encoding="utf-8") as f:
         f.write(html)
 
@@ -207,7 +215,8 @@ def main():
     js_content = generate_products_js(products)
     with open(JS_PATH, "w", encoding="utf-8") as f:
         f.write(js_content)
-    print("  OK products.js mis a jour")
+    js_hash = hashlib.md5(js_content.encode()).hexdigest()[:8]
+    print(f"  OK products.js mis a jour (hash: {js_hash})")
 
     print("\nGeneration du JSON-LD produits...")
     jsonld_str = generate_jsonld_products(products)
@@ -215,8 +224,8 @@ def main():
 
     print("\nMise a jour de index.html...")
     hidden_html = generate_hidden_html(products)
-    update_index_html(hidden_html, jsonld_str)
-    print("  OK index.html mis a jour (hidden + JSON-LD)")
+    update_index_html(hidden_html, jsonld_str, js_hash)
+    print("  OK index.html mis a jour (hidden + JSON-LD + cache bust)")
 
     print(f"\nSynchronisation terminee -- {len(products)} produits")
 
