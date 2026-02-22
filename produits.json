@@ -80,7 +80,7 @@
       "categorie": "savons",
       "poids": 170,
       "id": "savon-nigelle",
-      "image": "images/produits/savons/nigelle.jpg",
+      "image": "images/produits/front-view-home-made-soap-table.jpg",
       "description": "Enrichi en huile de nigelle. Purifiant et nourrissant pour la peau.",
       "origine": "Maroc"
     },
@@ -92,7 +92,7 @@
       "categorie": "savons",
       "poids": 170,
       "id": "savon-rose",
-      "image": "images/produits/savons/rose.jpg",
+      "image": "images/produits/high-angle-pink-homemade-soap.jpg",
       "description": "À l'eau de rose de Damas. Hydratant et délicatement parfumé.",
       "origine": "Turquie"
     },
