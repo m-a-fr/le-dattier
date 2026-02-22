@@ -107,7 +107,7 @@ nav.scrolled {
 }
 .nav-back:hover { opacity: 0.7; }
 @media (max-width: 900px) {
-  html.snipcart-active .nav-back { display: flex; }
+  .nav-back.visible { display: flex; }
 }
 .cart-count {
   background: var(--gold); color: var(--noir);

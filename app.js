@@ -71,11 +71,26 @@ document.addEventListener('snipcart.ready', () => {
   Snipcart.events.on('item.added', (item) => {
     showToast(`${item.name} ajouté au panier`);
   });
+});
 
-  // Flèche retour mobile : ferme le panier au clic
-  document.getElementById('navBack').addEventListener('click', () => {
-    Snipcart.api.theme.cart.close();
-  });
+// ========================
+// FLÈCHE RETOUR MOBILE
+// MutationObserver sur <html> — indépendant des events Snipcart
+// ========================
+const navBack = document.getElementById('navBack');
+
+new MutationObserver(() => {
+  if (document.documentElement.classList.contains('snipcart-active')) {
+    navBack.classList.add('visible');
+  } else {
+    navBack.classList.remove('visible');
+  }
+}).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+navBack.addEventListener('click', () => {
+  // Clic sur le bouton natif de fermeture de Snipcart
+  const closeBtn = document.querySelector('.snipcart-modal__close');
+  if (closeBtn) closeBtn.click();
 });
 
 // ========================
