@@ -116,7 +116,7 @@
       "categorie": "nigelle",
       "poids": 150,
       "id": "nigelle-pure",
-      "image": "images/produits/nigelle/pure.jpg",
+      "image": "images/produits/gemini_generated_image_7jj0u87jj0u87jj0.png",
       "description": "Première pression à froid. Graines de Nigella Sativa d'Égypte.",
       "origine": "Égypte"
     },
@@ -128,7 +128,7 @@
       "categorie": "nigelle",
       "poids": 150,
       "id": "nigelle-bio",
-      "image": "images/produits/nigelle/bio.jpg",
+      "image": "images/produits/gemini_generated_image_gdenotgdenotgden.png",
       "description": "Certifiée bio. Issue de graines éthiopiennes réputées pour leur pureté.",
       "origine": "Éthiopie"
     },
@@ -140,20 +140,8 @@
       "categorie": "nigelle",
       "poids": 100,
       "id": "nigelle-capsules",
-      "image": "images/produits/nigelle/capsules.jpg",
+      "image": "images/produits/gemini_generated_image_fs88vifs88vifs88.png",
       "description": "60 capsules d'huile de nigelle pure. Cure de bien-être quotidienne.",
-      "origine": "Égypte"
-    },
-    {
-      "unite": "coffret",
-      "badge": "",
-      "nom": "Coffret Nigelle Prestige",
-      "prix": 39.9,
-      "categorie": "nigelle",
-      "poids": 500,
-      "id": "nigelle-coffret",
-      "image": "images/produits/nigelle/coffret.jpg",
-      "description": "Huile pure 100ml + capsules 60 + savon nigelle. Le rituel complet.",
       "origine": "Égypte"
     }
   ]
