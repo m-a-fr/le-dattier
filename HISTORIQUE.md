@@ -65,33 +65,40 @@ le-dattier-project/
 
 ---
 
-## Catalogue produits (14 produits)
+## Catalogue produits (13 produits)
 
-### Dattes (6)
-| ID | Nom | Origine | Prix | Badge |
-|---|---|---|---|---|
-| datte-deglet-nour | Deglet Nour Premium | Algérie | 18,90 € / 500g | best |
-| datte-medjool | Medjool Royale | Palestine | 24,50 € / 500g | new |
-| datte-ajwa | Ajwa de Médine | Arabie Saoudite | 32,00 € / 400g | — |
-| datte-sukari | Sukari d'Al-Qassim | Arabie Saoudite | 28,00 € / 400g | — |
-| datte-mazafati | Mazafati de Bam | Iran | 19,90 € / 500g | — |
-| datte-coffret | Coffret Découverte Dattes | Multi-origines | 45,00 € / coffret | new |
+### Dattes (5)
+| ID | Nom | Origine | Prix | Badge | Image |
+|---|---|---|---|---|---|
+| datte-deglet-nour | Deglet Nour Premium | Algérie | 5,90 € / 500g | best | vraie photo (Decap) |
+| datte-medjool | Medjool Royale | Palestine | 24,50 € / 500g | new | vraie photo (Decap) |
+| datte-ajwa | Ajwa de Médine | Arabie Saoudite | 32,00 € / 400g | — | vraie photo (Decap) |
+| datte-sukari | Sukari d'Al-Qassim | Arabie Saoudite | 28,00 € / 400g | — | vraie photo (Decap) |
+| datte-mazafati | Mazafati de Bam | Iran | 19,90 € / 500g | — | vraie photo (Decap) |
 
 ### Savons (4)
-| ID | Nom | Origine | Prix | Badge |
-|---|---|---|---|---|
-| savon-alep-laurier | Savon d'Alep au Laurier | Syrie | 12,90 € / 200g | best |
-| savon-nigelle | Savon Noir à la Nigelle | Maroc | 9,90 € / 150g | — |
-| savon-rose | Savon à la Rose de Damas | Turquie | 11,50 € / 150g | new |
-| savon-olive | Savon à l'Huile d'Olive | Palestine | 8,90 € / 120g | — |
+| ID | Nom | Origine | Prix | Badge | Image |
+|---|---|---|---|---|---|
+| savon-alep-laurier | Savon d'Alep au Laurier | Syrie | 12,90 € / 200g | best | placeholder |
+| savon-nigelle | Savon Noir à la Nigelle | Maroc | 9,90 € / 150g | — | placeholder |
+| savon-rose | Savon à la Rose de Damas | Turquie | 11,50 € / 150g | new | placeholder |
+| savon-olive | Savon à l'Huile d'Olive | Palestine | 8,90 € / 120g | — | placeholder |
 
 ### Nigelle (4)
-| ID | Nom | Origine | Prix | Badge |
-|---|---|---|---|---|
-| nigelle-pure | Huile de Nigelle Pure | Égypte | 16,90 € / 100ml | best |
-| nigelle-bio | Huile de Nigelle Bio | Éthiopie | 22,50 € / 100ml | new |
-| nigelle-capsules | Capsules de Nigelle | Égypte | 18,90 € / 60 caps | — |
-| nigelle-coffret | Coffret Nigelle Prestige | Égypte | 39,90 € / coffret | — |
+| ID | Nom | Origine | Prix | Badge | Image |
+|---|---|---|---|---|---|
+| nigelle-pure | Huile de Nigelle Pure | Égypte | 16,90 € / 100ml | best | placeholder |
+| nigelle-bio | Huile de Nigelle Bio | Éthiopie | 22,50 € / 100ml | new | placeholder |
+| nigelle-capsules | Capsules de Nigelle | Égypte | 18,90 € / 60 caps | — | placeholder |
+| nigelle-coffret | Coffret Nigelle Prestige | Égypte | 39,90 € / coffret | — | placeholder |
+
+### Organisation des images
+
+- **Dattes** : 5 vraies photos uploadées via Decap CMS → stockées directement dans `images/produits/` (noms générés par Decap). Le dossier `images/produits/dattes/` contient les anciens placeholders, non utilisés.
+- **Savons** : 4 placeholders dans `images/produits/savons/`
+- **Nigelle** : 4 placeholders dans `images/produits/nigelle/`
+
+⚠️ À terme : remplacer les placeholders savons/nigelle par de vraies photos, et normaliser les noms des images dattes.
 
 ---
 
@@ -182,7 +189,9 @@ Le propriétaire peut avoir modifié le JSON via l'admin web sans le mentionner.
 ## Ce qui reste à faire
 
 ### Obligatoire avant mise en ligne
-- [ ] Remplacer les images placeholder par de vraies photos produit
+- [x] ~~Remplacer les images dattes par de vraies photos~~ (fait via Decap CMS)
+- [ ] Remplacer les images placeholder savons et nigelle par de vraies photos
+- [ ] Normaliser les noms de fichiers des images dattes (uploadées avec noms auto par Decap)
 - [ ] Remplir les [CROCHETS] dans cgv.html (SIRET, adresse, raison sociale, médiateur)
 - [ ] Remplir les [CROCHETS] dans mentions-legales.html (mêmes infos)
 - [ ] Connecter Stripe en mode live dans le dashboard Snipcart
@@ -212,7 +221,8 @@ Le propriétaire peut avoir modifié le JSON via l'admin web sans le mentionner.
 - Le site est responsive (breakpoint 900px) mais le menu mobile n'a pas de burger menu
 - Les pages légales sont des modèles — faire valider par un juriste
 - Snipcart est en mode test tant que Stripe n'est pas connecté en live
-- Les images actuelles sont des placeholders de ~10-40 Ko chacune
+- Les images dattes sont des vraies photos, savons/nigelle restent des placeholders (~10-40 Ko)
+- Les images uploadées via Decap CMS ont des noms générés automatiquement (non normalisés)
 
 ---
 
@@ -238,7 +248,7 @@ Le propriétaire peut avoir modifié le JSON via l'admin web sans le mentionner.
 - Mise en place du système CSV + sync-produits.py
 - Test d'intégration de vraie photo produit (savon d'Alep)
 
-### Session 4 (23/02/2026 — actuelle)
+### Session 4 (23/02/2026)
 - Suppression de la colonne emoji du CSV et de tout le code associé
 - Encodage UTF-8 avec BOM pour compatibilité Excel/LibreOffice français
 - Réorganisation des images : images/site/ et images/produits/[categorie]/
@@ -280,6 +290,17 @@ Le propriétaire peut avoir modifié le JSON via l'admin web sans le mentionner.
   - Workflow autonome : admin modifie via /admin/ → Decap commit → Netlify rebuild auto
   - CLAUDE.md, README.md, HISTORIQUE.md mis à jour
 
+### Session 5 (22/02/2026)
+- **Modifications produits via Decap CMS (entre sessions) :**
+  - `datte-coffret` supprimé du catalogue → 13 produits
+  - Prix `datte-deglet-nour` modifié : 18,90 € → 5,90 €
+  - 5 vraies photos dattes uploadées via Decap CMS (stockées dans `images/produits/` racine)
+- **Resynchronisation et mise à jour des docs :**
+  - Incohérences détectées (products.js/hidden/JSON-LD encore à 14 produits) → sync lancé
+  - `sync-produits.py` relancé → products.js + bloc hidden + JSON-LD remis à 13 produits
+  - `check-projet.py` : 0 erreur, 0 warning après correction
+  - README.md, HISTORIQUE.md mis à jour pour refléter l'état réel du repo
+
 ---
 
-*Dernière mise à jour : 23 février 2026*
+*Dernière mise à jour : 22 février 2026*

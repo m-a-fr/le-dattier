@@ -12,10 +12,10 @@ const products = [
     origin: "Algérie",
     cat: "dattes",
     desc: "La reine des dattes. Texture fondante, notes de miel et de caramel.",
-    price: 18.90,
+    price: 5.90,
     unit: "500g",
     badge: "best",
-    img: "images/produits/dattes/deglet-nour.jpg",
+    img: "images/produits/38655-0w470h470_dattes_deglet_nour_bio_equitable_algerie.jpg",
     weight: 520
   },
 
@@ -28,7 +28,7 @@ const products = [
     price: 24.50,
     unit: "500g",
     badge: "new",
-    img: "images/produits/dattes/medjool.jpg",
+    img: "images/produits/datte-medjool-3.jpg",
     weight: 520
   },
 
@@ -41,7 +41,7 @@ const products = [
     price: 32.00,
     unit: "400g",
     badge: "",
-    img: "images/produits/dattes/ajwa.jpg",
+    img: "images/produits/datte-ajwa-miniature.jpg",
     weight: 420
   },
 
@@ -54,7 +54,7 @@ const products = [
     price: 28.00,
     unit: "400g",
     badge: "",
-    img: "images/produits/dattes/sukari.jpg",
+    img: "images/produits/unnamed_le_upscale_prime.jpg",
     weight: 420
   },
 
@@ -67,21 +67,8 @@ const products = [
     price: 19.90,
     unit: "500g",
     badge: "",
-    img: "images/produits/dattes/mazafati.jpg",
+    img: "images/produits/dattes_sches.jpg",
     weight: 520
-  },
-
-  {
-    id: "datte-coffret",
-    name: "Coffret Découverte Dattes",
-    origin: "Multi-origines",
-    cat: "dattes",
-    desc: "5 variétés d'exception réunies dans un coffret cadeau élégant.",
-    price: 45.00,
-    unit: "coffret",
-    badge: "new",
-    img: "images/produits/dattes/coffret.jpg",
-    weight: 800
   },
   // SAVONS
 

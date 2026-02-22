@@ -50,9 +50,10 @@ le-dattier-project/
 ├── images/
 │   ├── site/                 ← hero.jpg, story.jpg, values-bg.jpg
 │   └── produits/
-│       ├── dattes/           ← 6 photos produits
-│       ├── savons/           ← 4 photos produits
-│       └── nigelle/          ← 4 photos produits
+│       ├── (racine)          ← 5 vraies photos dattes (uploadées via Decap CMS)
+│       ├── dattes/           ← placeholders dattes (non utilisés)
+│       ├── savons/           ← 4 photos savons
+│       └── nigelle/          ← 4 photos nigelle
 │
 ├── CLAUDE.md                 ← Instructions Claude Code
 ├── HISTORIQUE.md             ← Historique complet du projet
@@ -61,11 +62,11 @@ le-dattier-project/
 
 ## Catalogue
 
-14 produits répartis en 3 catégories :
+13 produits répartis en 3 catégories :
 
 | Catégorie | Produits | Prix |
 |---|---|---|
-| Dattes | Deglet Nour, Medjool, Ajwa, Sukari, Mazafati, Coffret | 18,90 – 45,00 € |
+| Dattes | Deglet Nour, Medjool, Ajwa, Sukari, Mazafati | 5,90 – 32,00 € |
 | Savons | Alep Laurier, Nigelle, Rose de Damas, Olive | 8,90 – 12,90 € |
 | Nigelle | Huile Pure, Huile Bio, Capsules, Coffret Prestige | 16,90 – 39,90 € |
 
