@@ -27,13 +27,17 @@ def read_products():
     with open(JSON_PATH, "r", encoding="utf-8") as f:
         data = json.load(f)
     products = data.get("produits", [])
-    # Normaliser les types (Decap CMS peut envoyer des strings pour les nombres)
+    # Normaliser les types et les champs optionnels
     for p in products:
-        p["prix"] = float(p["prix"])
-        p["poids"] = int(p["poids"])
-        # S'assurer que badge est une string (jamais None)
-        if p.get("badge") is None:
+        p["prix"] = float(p.get("prix", 0))
+        p["poids"] = int(p.get("poids", 0))
+        # Champs optionnels : valeur par défaut si absent ou None
+        if not p.get("badge"):
             p["badge"] = ""
+        if not p.get("image"):
+            p["image"] = ""
+        if not p.get("description"):
+            p["description"] = ""
     return products
 
 
@@ -92,6 +96,7 @@ def generate_hidden_html(products):
     for p in products:
         desc_escaped = p["description"].replace('"', '&quot;')
         name_escaped = p["nom"].replace('"', '&quot;')
+        img_attr = f' data-item-image="{p["image"]}"' if p["image"] else ""
         lines.append(
             f'    <button class="snipcart-add-item"'
             f' data-item-id="{p["id"]}"'
@@ -99,7 +104,7 @@ def generate_hidden_html(products):
             f' data-item-price="{p["prix"]:.2f}"'
             f' data-item-url="/"'
             f' data-item-description="{desc_escaped}"'
-            f' data-item-image="{p["image"]}"'
+            f'{img_attr}'
             f' data-item-weight="{p["poids"]}"'
             f' data-item-categories="{p["categorie"]}"'
             f"></button>"
@@ -123,7 +128,6 @@ def generate_jsonld_products(products):
             "@type": "Product",
             "name": p["nom"],
             "description": p["description"],
-            "image": f'{SITE_URL}/{p["image"]}',
             "brand": {
                 "@type": "Brand",
                 "name": "Le Dattier"
@@ -141,6 +145,8 @@ def generate_jsonld_products(products):
                 }
             }
         }
+        if p["image"]:
+            item["image"] = f'{SITE_URL}/{p["image"]}'
         if p["poids"]:
             item["weight"] = {
                 "@type": "QuantitativeValue",

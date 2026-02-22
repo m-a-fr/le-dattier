@@ -64,11 +64,15 @@ def check_products():
     json_ids = [p["id"] for p in json_products]
 
     # Vérifier champs obligatoires
-    required_fields = ["id", "nom", "origine", "categorie", "description", "prix", "unite", "badge", "image", "poids"]
+    required_fields = ["id", "nom", "origine", "categorie", "description", "prix", "unite", "poids"]
+    optional_fields = ["badge", "image"]
     for p in json_products:
         missing = [f for f in required_fields if f not in p]
         if missing:
             err(f"Produit {p.get('id', '???')} : champs manquants {missing}")
+        missing_opt = [f for f in optional_fields if f not in p]
+        if missing_opt:
+            warn(f"Produit {p.get('id', '???')} : champs optionnels absents {missing_opt}")
 
     # Doublons
     seen = set()
@@ -164,13 +168,20 @@ def check_products():
     # --- Vérifier images ---
     print("\n  --- Images produits ---")
     missing_images = 0
+    no_image = 0
     for p in json_products:
-        img_path = os.path.join(BASE, p["image"])
+        img = p.get("image", "")
+        if not img:
+            no_image += 1
+            continue
+        img_path = os.path.join(BASE, img)
         if not os.path.exists(img_path):
-            err(f"Image manquante : {p['image']} (produit: {p['id']})")
+            err(f"Image manquante : {img} (produit: {p['id']})")
             missing_images += 1
     if missing_images == 0:
-        ok(f"Toutes les images produits existent ({json_count} fichiers)")
+        ok(f"Images produits OK ({json_count - no_image} fichiers présents)")
+    if no_image > 0:
+        warn(f"{no_image} produit(s) sans image")
 
     # --- Vérifier catégories vs filtres ---
     json_cats = set(p["categorie"] for p in json_products)
