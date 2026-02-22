@@ -19,7 +19,7 @@
 | E-commerce / Panier | Snipcart v3.7.1 | ~11 €/mois (2% transactions) |
 | Paiement | Stripe (via Snipcart) | 1,5% + 0,25 € / transaction |
 | Code | HTML/CSS/JS statique (pas de framework) | — |
-| Gestion produits | CSV (produits.csv) + script Python (sync-produits.py) | — |
+| Gestion produits | JSON (produits.json) + Decap CMS + script Python (sync-produits.py) | — |
 | Déploiement | Git push → Netlify auto-deploy | — |
 | Domaine | À acheter (pas encore fait) | ~10 €/an |
 
@@ -35,9 +35,12 @@
 
 ```
 le-dattier-project/
-├── produits.csv              <- SOURCE UNIQUE DES PRODUITS (UTF-8 BOM, séparateur ;)
-├── sync-produits.py          <- Sync CSV → products.js + index.html + JSON-LD
-├── check-projet.py           <- ⚠️ VALIDATION PRÉ-LIVRAISON (cohérence + SEO)
+├── produits.json             <- SOURCE UNIQUE DES PRODUITS
+├── sync-produits.py          <- Sync JSON → products.js + index.html + JSON-LD
+├── check-projet.py           <- ⚠️ VALIDATION PRÉ-LIVRAISON (cohérence + SEO + README)
+├── admin/
+│   ├── index.html            <- Interface Decap CMS
+│   └── config.yml            <- Configuration champs/collections
 ├── index.html                <- Page d'accueil (hero, boutique, histoire, engagements, newsletter)
 ├── faq.html                  <- 10 Q&A avec accordéon JS
 ├── livraison.html            <- Tarifs, retours, droit de rétractation
@@ -113,7 +116,7 @@ Le script `sync-produits.py` met à jour ce bloc automatiquement en même temps 
 
 ## Workflow gestion produits
 
-1. Modifier `produits.csv` (Excel, LibreOffice, éditeur texte)
+1. Modifier `produits.json` (via admin web Decap CMS ou manuellement)
 2. Lancer `python3 sync-produits.py`
 3. `git add . && git commit -m "description" && git push`
 
@@ -149,15 +152,14 @@ Typographies :
 Avant toute livraison (ZIP, commit, déploiement), cette séquence est obligatoire :
 
 ```bash
-python3 sync-produits.py    # Régénère products.js + bloc hidden + JSON-LD
-python3 check-projet.py     # Vérifie cohérence produits + conformité SEO
+python3 sync-produits.py    # Régénère products.js + bloc hidden + JSON-LD depuis produits.json
+python3 check-projet.py     # Vérifie cohérence produits + conformité SEO + README
 ```
 
 Si `check-projet.py` retourne des erreurs (❌), corriger avant de livrer.
 
 Ce workflow s'applique **même si les modifications ne touchent pas les produits**.
-Le propriétaire peut avoir modifié le CSV sans le mentionner, ou un changement
-de structure HTML peut casser accidentellement le bloc hidden Snipcart ou le SEO.
+Le propriétaire peut avoir modifié le JSON via l'admin web sans le mentionner.
 
 ---
 
@@ -188,6 +190,9 @@ de structure HTML peut casser accidentellement le bloc hidden Snipcart ou le SEO
 - [ ] Mettre à jour les URLs dans sitemap.xml, canonical et OG si le domaine change
 - [ ] Créer le repo GitHub et faire le premier push
 - [ ] Connecter le repo à Netlify
+- [ ] Activer Netlify Identity dans le dashboard Netlify
+- [ ] Activer Git Gateway (Identity > Settings > Services)
+- [ ] Inviter l'admin par email (Identity > Invite users)
 
 ### Améliorations possibles
 - [ ] Ajouter un menu burger pour mobile (actuellement les liens nav sont cachés sous 900px)
@@ -261,6 +266,18 @@ de structure HTML peut casser accidentellement le bloc hidden Snipcart ou le SEO
   - CLAUDE.md réécrit avec la règle absolue de pré-livraison en tête de fichier
   - HISTORIQUE.md mis à jour avec le workflow
   - Le workflow s'applique systématiquement, même si le propriétaire ne le demande pas
+- **Migration vers Decap CMS :**
+  - produits.csv → produits.json (source unique)
+  - CSV supprimé définitivement
+  - Dossier admin/ créé (index.html + config.yml Decap CMS)
+  - sync-produits.py réécrit pour lire JSON au lieu de CSV
+  - check-projet.py réécrit pour valider JSON au lieu de CSV
+  - netlify.toml : ajout build command `python3 sync-produits.py` (auto au deploy)
+  - robots.txt : ajout Disallow /admin/
+  - Widget Netlify Identity ajouté sur index.html
+  - Auth : Netlify Identity (email/mdp, gratuit 5 users)
+  - Workflow autonome : admin modifie via /admin/ → Decap commit → Netlify rebuild auto
+  - CLAUDE.md, README.md, HISTORIQUE.md mis à jour
 
 ---
 

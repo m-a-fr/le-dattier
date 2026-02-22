@@ -1,0 +1,91 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Dossier pour l'upload d'images via l'admin
+media_folder: "images/produits"
+public_folder: "images/produits"
+
+# Langue de l'interface
+locale: "fr"
+
+collections:
+  - name: "catalogue"
+    label: "Catalogue"
+    files:
+      - name: "produits"
+        label: "Produits"
+        file: "produits.json"
+        description: "Catalogue complet des produits Le Dattier"
+        fields:
+          - name: "produits"
+            label: "Liste des produits"
+            label_singular: "Produit"
+            widget: "list"
+            summary: "{{fields.nom}} — {{fields.prix}} € / {{fields.unite}} [{{fields.categorie}}]"
+            fields:
+              - name: "id"
+                label: "Identifiant"
+                widget: "string"
+                hint: "Unique, en kebab-case. Ex : datte-medjool"
+                pattern:
+                  - "^[a-z0-9]+(-[a-z0-9]+)*$"
+                  - "Uniquement des minuscules, chiffres et tirets"
+
+              - name: "nom"
+                label: "Nom du produit"
+                widget: "string"
+                hint: "Nom affiché sur le site. Ex : Medjool Royale"
+
+              - name: "origine"
+                label: "Origine"
+                widget: "string"
+                hint: "Pays d'origine. Ex : Palestine"
+
+              - name: "categorie"
+                label: "Catégorie"
+                widget: "select"
+                options:
+                  - { label: "Dattes", value: "dattes" }
+                  - { label: "Savons", value: "savons" }
+                  - { label: "Huile de Nigelle", value: "nigelle" }
+
+              - name: "description"
+                label: "Description"
+                widget: "string"
+                hint: "Description courte, 1-2 phrases"
+
+              - name: "prix"
+                label: "Prix (€)"
+                widget: "number"
+                value_type: "float"
+                step: 0.10
+                min: 0
+                hint: "Prix TTC en euros. Ex : 18.90"
+
+              - name: "unite"
+                label: "Unité"
+                widget: "string"
+                hint: "Poids ou contenant affiché. Ex : 500g, 100ml, coffret"
+
+              - name: "badge"
+                label: "Badge"
+                widget: "select"
+                options:
+                  - { label: "Aucun", value: "" }
+                  - { label: "Nouveau", value: "new" }
+                  - { label: "Best-seller", value: "best" }
+                default: ""
+
+              - name: "image"
+                label: "Photo produit"
+                widget: "image"
+                hint: "Format carré recommandé (600x600px min)"
+                choose_url: false
+
+              - name: "poids"
+                label: "Poids (grammes)"
+                widget: "number"
+                value_type: "int"
+                min: 0
+                hint: "Poids réel en grammes pour le calcul de livraison"

@@ -1,0 +1,172 @@
+{
+  "produits": [
+    {
+      "id": "datte-deglet-nour",
+      "nom": "Deglet Nour Premium",
+      "origine": "Algérie",
+      "categorie": "dattes",
+      "description": "La reine des dattes. Texture fondante, notes de miel et de caramel.",
+      "prix": 18.9,
+      "unite": "500g",
+      "badge": "best",
+      "image": "images/produits/dattes/deglet-nour.jpg",
+      "poids": 520
+    },
+    {
+      "id": "datte-medjool",
+      "nom": "Medjool Royale",
+      "origine": "Palestine",
+      "categorie": "dattes",
+      "description": "Charnue et généreuse, aux saveurs de caramel beurré. Un pur délice.",
+      "prix": 24.5,
+      "unite": "500g",
+      "badge": "new",
+      "image": "images/produits/dattes/medjool.jpg",
+      "poids": 520
+    },
+    {
+      "id": "datte-ajwa",
+      "nom": "Ajwa de Médine",
+      "origine": "Arabie Saoudite",
+      "categorie": "dattes",
+      "description": "La datte sacrée. Saveur intense, légèrement boisée et sucrée.",
+      "prix": 32.0,
+      "unite": "400g",
+      "badge": "",
+      "image": "images/produits/dattes/ajwa.jpg",
+      "poids": 420
+    },
+    {
+      "id": "datte-sukari",
+      "nom": "Sukari d'Al-Qassim",
+      "origine": "Arabie Saoudite",
+      "categorie": "dattes",
+      "description": "Douce et croustillante, au goût de sucre d'orge. Rare et précieuse.",
+      "prix": 28.0,
+      "unite": "400g",
+      "badge": "",
+      "image": "images/produits/dattes/sukari.jpg",
+      "poids": 420
+    },
+    {
+      "id": "datte-mazafati",
+      "nom": "Mazafati de Bam",
+      "origine": "Iran",
+      "categorie": "dattes",
+      "description": "Moelleuse et juteuse. Un fondant exceptionnel aux notes de chocolat.",
+      "prix": 19.9,
+      "unite": "500g",
+      "badge": "",
+      "image": "images/produits/dattes/mazafati.jpg",
+      "poids": 520
+    },
+    {
+      "id": "datte-coffret",
+      "nom": "Coffret Découverte Dattes",
+      "origine": "Multi-origines",
+      "categorie": "dattes",
+      "description": "5 variétés d'exception réunies dans un coffret cadeau élégant.",
+      "prix": 45.0,
+      "unite": "coffret",
+      "badge": "new",
+      "image": "images/produits/dattes/coffret.jpg",
+      "poids": 800
+    },
+    {
+      "id": "savon-alep-laurier",
+      "nom": "Savon d'Alep au Laurier",
+      "origine": "Syrie",
+      "categorie": "savons",
+      "description": "40% huile de laurier. Saponifié à froid selon la tradition millénaire d'Alep.",
+      "prix": 12.9,
+      "unite": "200g",
+      "badge": "best",
+      "image": "images/produits/savons/alep-laurier.jpg",
+      "poids": 220
+    },
+    {
+      "id": "savon-nigelle",
+      "nom": "Savon Noir à la Nigelle",
+      "origine": "Maroc",
+      "categorie": "savons",
+      "description": "Enrichi en huile de nigelle. Purifiant et nourrissant pour la peau.",
+      "prix": 9.9,
+      "unite": "150g",
+      "badge": "",
+      "image": "images/produits/savons/nigelle.jpg",
+      "poids": 170
+    },
+    {
+      "id": "savon-rose",
+      "nom": "Savon à la Rose de Damas",
+      "origine": "Turquie",
+      "categorie": "savons",
+      "description": "À l'eau de rose de Damas. Hydratant et délicatement parfumé.",
+      "prix": 11.5,
+      "unite": "150g",
+      "badge": "new",
+      "image": "images/produits/savons/rose.jpg",
+      "poids": 170
+    },
+    {
+      "id": "savon-olive",
+      "nom": "Savon à l'Huile d'Olive",
+      "origine": "Palestine",
+      "categorie": "savons",
+      "description": "100% huile d'olive extra vierge. Le savon ancestral de Naplouse.",
+      "prix": 8.9,
+      "unite": "120g",
+      "badge": "",
+      "image": "images/produits/savons/olive.jpg",
+      "poids": 140
+    },
+    {
+      "id": "nigelle-pure",
+      "nom": "Huile de Nigelle Pure",
+      "origine": "Égypte",
+      "categorie": "nigelle",
+      "description": "Première pression à froid. Graines de Nigella Sativa d'Égypte.",
+      "prix": 16.9,
+      "unite": "100ml",
+      "badge": "best",
+      "image": "images/produits/nigelle/pure.jpg",
+      "poids": 150
+    },
+    {
+      "id": "nigelle-bio",
+      "nom": "Huile de Nigelle Bio",
+      "origine": "Éthiopie",
+      "categorie": "nigelle",
+      "description": "Certifiée bio. Issue de graines éthiopiennes réputées pour leur pureté.",
+      "prix": 22.5,
+      "unite": "100ml",
+      "badge": "new",
+      "image": "images/produits/nigelle/bio.jpg",
+      "poids": 150
+    },
+    {
+      "id": "nigelle-capsules",
+      "nom": "Capsules de Nigelle",
+      "origine": "Égypte",
+      "categorie": "nigelle",
+      "description": "60 capsules d'huile de nigelle pure. Cure de bien-être quotidienne.",
+      "prix": 18.9,
+      "unite": "60 caps",
+      "badge": "",
+      "image": "images/produits/nigelle/capsules.jpg",
+      "poids": 100
+    },
+    {
+      "id": "nigelle-coffret",
+      "nom": "Coffret Nigelle Prestige",
+      "origine": "Égypte",
+      "categorie": "nigelle",
+      "description": "Huile pure 100ml + capsules 60 + savon nigelle. Le rituel complet.",
+      "prix": 39.9,
+      "unite": "coffret",
+      "badge": "",
+      "image": "images/produits/nigelle/coffret.jpg",
+      "poids": 500
+    }
+  ]
+}

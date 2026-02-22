@@ -1,6 +1,7 @@
 # Configuration Netlify pour Le Dattier
 [build]
   publish = "."
+  command = "python3 sync-produits.py"
 
 # Page 404 personnalisée
 [[redirects]]

@@ -2,17 +2,16 @@
 """
 check-projet.py — Le Dattier
 Script de validation pre-livraison.
-Verifie la coherence produits + conformite SEO.
+Verifie la coherence produits + conformite SEO + coherence README.
 
 Usage : python3 check-projet.py
 Retourne exit code 0 si OK, 1 si erreurs.
 """
 
-import csv
+import json
 import os
 import re
 import sys
-import json
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 ERRORS = []
@@ -37,7 +36,7 @@ def read_file(path):
     full = os.path.join(BASE, path)
     if not os.path.exists(full):
         return None
-    with open(full, "r", encoding="utf-8-sig") as f:
+    with open(full, "r", encoding="utf-8") as f:
         return f.read()
 
 
@@ -47,137 +46,146 @@ def read_file(path):
 def check_products():
     print("\n═══ COHÉRENCE PRODUITS ═══")
 
-    # --- Lire CSV ---
-    csv_path = os.path.join(BASE, "produits.csv")
-    if not os.path.exists(csv_path):
-        err("produits.csv introuvable")
-        return [], []
+    # --- Lire JSON ---
+    json_path = os.path.join(BASE, "produits.json")
+    if not os.path.exists(json_path):
+        err("produits.json introuvable")
+        return []
 
-    csv_products = []
-    with open(csv_path, "r", encoding="utf-8-sig") as f:
-        reader = csv.DictReader(f, delimiter=";")
-        cols = reader.fieldnames
-        expected_cols = ["id", "nom", "origine", "categorie", "description", "prix", "unite", "badge", "image", "poids"]
-        if cols != expected_cols:
-            err(f"Colonnes CSV incorrectes: {cols} (attendu: {expected_cols})")
-        for row in reader:
-            csv_products.append(row)
+    try:
+        with open(json_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except json.JSONDecodeError as e:
+        err(f"produits.json : JSON invalide ({e})")
+        return []
 
-    csv_ids = [p["id"] for p in csv_products]
-    csv_count = len(csv_products)
+    json_products = data.get("produits", [])
+    json_count = len(json_products)
+    json_ids = [p["id"] for p in json_products]
 
-    # Doublons CSV
+    # Vérifier champs obligatoires
+    required_fields = ["id", "nom", "origine", "categorie", "description", "prix", "unite", "badge", "image", "poids"]
+    for p in json_products:
+        missing = [f for f in required_fields if f not in p]
+        if missing:
+            err(f"Produit {p.get('id', '???')} : champs manquants {missing}")
+
+    # Doublons
     seen = set()
-    for pid in csv_ids:
+    for pid in json_ids:
         if pid in seen:
-            err(f"ID dupliqué dans CSV: {pid}")
+            err(f"ID dupliqué dans JSON : {pid}")
         seen.add(pid)
 
-    ok(f"produits.csv : {csv_count} produits")
+    # Catégories valides
+    valid_cats = {"dattes", "savons", "nigelle"}
+    for p in json_products:
+        if p.get("categorie") not in valid_cats:
+            err(f"Catégorie inconnue '{p.get('categorie')}' pour {p['id']} (valides: {valid_cats})")
+
+    # Badge valide
+    valid_badges = {"", "new", "best"}
+    for p in json_products:
+        badge = p.get("badge", "")
+        if badge is None:
+            badge = ""
+        if badge not in valid_badges:
+            warn(f"Badge inconnu '{badge}' pour {p['id']} (valides: {valid_badges})")
+
+    ok(f"produits.json : {json_count} produits")
 
     # --- Lire products.js ---
     js_content = read_file("products.js")
     if js_content is None:
         err("products.js introuvable")
-        return csv_products, []
+        return json_products
 
     js_ids = re.findall(r'id:\s*"([^"]+)"', js_content)
-    js_prices = re.findall(r'price:\s*([\d.]+)', js_content)
     js_count = len(js_ids)
 
-    if js_count != csv_count:
-        err(f"products.js a {js_count} produits, CSV en a {csv_count}")
+    if js_count != json_count:
+        err(f"products.js a {js_count} produits, JSON en a {json_count}")
     else:
-        ok(f"products.js : {js_count} produits (= CSV)")
+        ok(f"products.js : {js_count} produits (= JSON)")
 
     # Comparer IDs
-    csv_set = set(csv_ids)
+    json_set = set(json_ids)
     js_set = set(js_ids)
-    missing_in_js = csv_set - js_set
-    extra_in_js = js_set - csv_set
+    missing_in_js = json_set - js_set
+    extra_in_js = js_set - json_set
     if missing_in_js:
-        err(f"Produits dans CSV mais pas dans products.js: {missing_in_js}")
+        err(f"Produits dans JSON mais pas dans products.js : {missing_in_js}")
     if extra_in_js:
-        err(f"Produits dans products.js mais pas dans CSV: {extra_in_js}")
+        err(f"Produits dans products.js mais pas dans JSON : {extra_in_js}")
     if not missing_in_js and not extra_in_js:
-        ok("IDs CSV ↔ products.js : cohérents")
+        ok("IDs JSON ↔ products.js : cohérents")
 
     # --- Lire bloc hidden index.html ---
     html_content = read_file("index.html")
     if html_content is None:
         err("index.html introuvable")
-        return csv_products, js_ids
+        return json_products
 
-    hidden_ids = re.findall(r'data-item-id="([^"]+)"', html_content)
-    # Ne garder que ceux dans le bloc hidden (tous les data-item-id dans le hidden div)
-    # En pratique on compare juste les sets
-    hidden_set = set(hidden_ids)
-    # Les IDs apparaissent aussi dans le JS rendu, donc on filtre par les uniques du hidden
-    # Le hidden a exactement N boutons, le JS en crée N aussi, donc on check count
-    hidden_count = html_content.count('class="snipcart-add-item"')
-    # Chaque produit a 1 bouton dans hidden + le template JS en crée 1 = 2 par produit
-    # Non, le hidden a N boutons, et le JS template en a 1 par produit aussi
-    # Mais les hidden buttons sont dans <div hidden>, comptons ceux-la
     hidden_match = re.search(r'<div hidden>(.*?)</div>', html_content, re.DOTALL)
     if hidden_match:
         hidden_block_ids = re.findall(r'data-item-id="([^"]+)"', hidden_match.group(1))
         hidden_block_count = len(hidden_block_ids)
-        if hidden_block_count != csv_count:
-            err(f"Bloc hidden index.html a {hidden_block_count} produits, CSV en a {csv_count}")
+        if hidden_block_count != json_count:
+            err(f"Bloc hidden index.html a {hidden_block_count} produits, JSON en a {json_count}")
         else:
-            ok(f"Bloc hidden index.html : {hidden_block_count} produits (= CSV)")
+            ok(f"Bloc hidden index.html : {hidden_block_count} produits (= JSON)")
 
-        # Verifier prix hidden vs CSV
+        # Vérifier prix hidden vs JSON
         hidden_prices = re.findall(r'data-item-price="([^"]+)"', hidden_match.group(1))
-        csv_prices = {p["id"]: f'{float(p["prix"]):.2f}' for p in csv_products}
+        json_prices = {p["id"]: f'{float(p["prix"]):.2f}' for p in json_products}
         for i, hid in enumerate(hidden_block_ids):
-            if i < len(hidden_prices) and hid in csv_prices:
-                if hidden_prices[i] != csv_prices[hid]:
-                    err(f"Prix différent pour {hid}: hidden={hidden_prices[i]}, CSV={csv_prices[hid]}")
-        ok("Prix hidden ↔ CSV : vérifiés")
+            if i < len(hidden_prices) and hid in json_prices:
+                if hidden_prices[i] != json_prices[hid]:
+                    err(f"Prix différent pour {hid} : hidden={hidden_prices[i]}, JSON={json_prices[hid]}")
+        ok("Prix hidden ↔ JSON : vérifiés")
     else:
         err("Bloc <div hidden> introuvable dans index.html")
 
-    # --- Verifier JSON-LD produits ---
+    # --- Vérifier JSON-LD produits ---
     jsonld_match = re.search(r'<script type="application/ld\+json" id="jsonld-products">\s*(.*?)\s*</script>', html_content, re.DOTALL)
     if jsonld_match:
         try:
             jsonld = json.loads(jsonld_match.group(1))
             jsonld_count = jsonld.get("numberOfItems", 0)
-            if jsonld_count != csv_count:
-                err(f"JSON-LD a {jsonld_count} produits, CSV en a {csv_count}")
+            if jsonld_count != json_count:
+                err(f"JSON-LD a {jsonld_count} produits, JSON en a {json_count}")
             else:
-                ok(f"JSON-LD produits : {jsonld_count} produits (= CSV)")
+                ok(f"JSON-LD produits : {jsonld_count} produits (= JSON)")
         except json.JSONDecodeError:
             err("JSON-LD produits : JSON invalide")
     else:
         err("JSON-LD produits introuvable dans index.html")
 
-    # --- Verifier images ---
+    # --- Vérifier images ---
     print("\n  --- Images produits ---")
     missing_images = 0
-    for p in csv_products:
+    for p in json_products:
         img_path = os.path.join(BASE, p["image"])
         if not os.path.exists(img_path):
-            err(f"Image manquante: {p['image']} (produit: {p['id']})")
+            err(f"Image manquante : {p['image']} (produit: {p['id']})")
             missing_images += 1
     if missing_images == 0:
-        ok(f"Toutes les images produits existent ({csv_count} fichiers)")
+        ok(f"Toutes les images produits existent ({json_count} fichiers)")
 
-    # --- Verifier catégories vs filtres ---
-    csv_cats = set(p["categorie"] for p in csv_products)
+    # --- Vérifier catégories vs filtres ---
+    json_cats = set(p["categorie"] for p in json_products)
     filter_cats = set(re.findall(r'data-cat="([^"]+)"', html_content)) - {"all"}
-    if csv_cats != filter_cats:
-        missing_filters = csv_cats - filter_cats
-        extra_filters = filter_cats - csv_cats
+    if json_cats != filter_cats:
+        missing_filters = json_cats - filter_cats
+        extra_filters = filter_cats - json_cats
         if missing_filters:
-            err(f"Catégories dans CSV sans bouton filtre: {missing_filters}")
+            err(f"Catégories dans JSON sans bouton filtre : {missing_filters}")
         if extra_filters:
-            warn(f"Boutons filtre sans produit: {extra_filters}")
+            warn(f"Boutons filtre sans produit : {extra_filters}")
     else:
-        ok(f"Catégories CSV ↔ filtres index.html : cohérents ({csv_cats})")
+        ok(f"Catégories JSON ↔ filtres index.html : cohérents ({json_cats})")
 
-    return csv_products, js_ids
+    return json_products
 
 
 # ============================================================
@@ -186,7 +194,7 @@ def check_products():
 def check_seo():
     print("\n═══ AUDIT SEO ═══")
 
-    html_files = [f for f in os.listdir(BASE) if f.endswith('.html') and f != '404.html']
+    html_files = [f for f in os.listdir(BASE) if f.endswith('.html') and f != '404.html' and not f.startswith('admin')]
 
     for f in sorted(html_files):
         print(f"\n  --- {f} ---")
@@ -200,9 +208,9 @@ def check_seo():
         if title:
             tlen = len(title.group(1))
             if tlen < 20:
-                warn(f"Title trop court ({tlen} car.): {title.group(1)}")
+                warn(f"Title trop court ({tlen} car.) : {title.group(1)}")
             elif tlen > 70:
-                warn(f"Title trop long ({tlen} car.): {title.group(1)[:50]}...")
+                warn(f"Title trop long ({tlen} car.) : {title.group(1)[:50]}...")
             else:
                 ok(f"Title OK ({tlen} car.)")
         else:
@@ -236,8 +244,7 @@ def check_seo():
         else:
             ok("1 seul <h1>")
 
-        # Heading hierarchy (ignore footer headings)
-        # Split content at <footer> to check only main content
+        # Heading hierarchy (ignore footer)
         main_content = content.split('<footer>')[0] if '<footer>' in content else content
         headings = re.findall(r'<h(\d)', main_content)
         if headings:
@@ -297,7 +304,7 @@ def check_seo():
         else:
             err(f"{f} manquant")
 
-    # Verifier sitemap cohérent avec pages HTML
+    # Vérifier sitemap cohérent avec pages HTML
     sitemap = read_file("sitemap.xml")
     if sitemap:
         sitemap_urls = re.findall(r'<loc>(.*?)</loc>', sitemap)
@@ -332,9 +339,17 @@ def check_seo():
         else:
             ok("Scripts locaux en defer")
 
+    # Decap CMS admin
+    admin_index = os.path.join(BASE, "admin", "index.html")
+    admin_config = os.path.join(BASE, "admin", "config.yml")
+    if os.path.exists(admin_index) and os.path.exists(admin_config):
+        ok("Admin Decap CMS : index.html + config.yml présents")
+    elif os.path.exists(admin_index) or os.path.exists(admin_config):
+        warn("Admin Decap CMS : fichier manquant (index.html ou config.yml)")
+
 
 # ============================================================
-# 3. COHÉRENCE README
+# 3. COHERENCE README
 # ============================================================
 def check_readme():
     print("\n═══ COHÉRENCE README ═══")
@@ -347,32 +362,32 @@ def check_readme():
     ok("README.md présent")
 
     # Vérifier que le nombre de produits mentionné est correct
-    csv_path = os.path.join(BASE, "produits.csv")
-    if os.path.exists(csv_path):
-        with open(csv_path, "r", encoding="utf-8-sig") as f:
-            reader = csv.DictReader(f, delimiter=";")
-            csv_products = list(reader)
-        csv_count = len(csv_products)
-        csv_cats = set(p["categorie"] for p in csv_products)
+    json_path = os.path.join(BASE, "produits.json")
+    if os.path.exists(json_path):
+        with open(json_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        json_products = data.get("produits", [])
+        json_count = len(json_products)
+        json_cats = set(p["categorie"] for p in json_products)
 
         # Vérifier le compte total
         count_match = re.search(r'(\d+)\s*produits?\s*(?:répartis|au total|dans)', readme)
         if count_match:
             readme_count = int(count_match.group(1))
-            if readme_count != csv_count:
-                warn(f"README mentionne {readme_count} produits, CSV en a {csv_count}")
+            if readme_count != json_count:
+                warn(f"README mentionne {readme_count} produits, JSON en a {json_count}")
             else:
-                ok(f"Nombre de produits dans README ({readme_count}) = CSV")
+                ok(f"Nombre de produits dans README ({readme_count}) = JSON")
         else:
             warn("Impossible de vérifier le nombre de produits dans README")
 
-        # Vérifier que toutes les catégories sont mentionnées
-        for cat in csv_cats:
+        # Vérifier catégories
+        for cat in json_cats:
             if cat.lower() not in readme.lower():
                 warn(f"Catégorie '{cat}' absente du README")
 
-    # Vérifier que les fichiers clés sont mentionnés
-    key_files = ["produits.csv", "sync-produits.py", "check-projet.py", "index.html",
+    # Vérifier fichiers clés
+    key_files = ["produits.json", "sync-produits.py", "check-projet.py", "index.html",
                  "products.js", "sitemap.xml", "robots.txt", "favicon.svg"]
     missing_mentions = [f for f in key_files if f not in readme]
     if missing_mentions:
@@ -380,15 +395,19 @@ def check_readme():
     else:
         ok("Tous les fichiers clés mentionnés dans README")
 
-    # Vérifier que les pages HTML existantes sont cohérentes avec la structure documentée
+    # Vérifier pages HTML
     actual_html = sorted([f for f in os.listdir(BASE) if f.endswith('.html')])
     for f in actual_html:
         if f not in readme:
             warn(f"Page {f} existe mais n'est pas dans le README")
 
+    # Vérifier que le CSV n'est plus mentionné comme source
+    if "produits.csv" in readme and "source" in readme.lower():
+        warn("README mentionne encore produits.csv comme source (migré vers JSON)")
+
 
 # ============================================================
-# 3. RAPPORT
+# 4. RAPPORT
 # ============================================================
 def main():
     print("╔══════════════════════════════════════════╗")

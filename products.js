@@ -1,7 +1,7 @@
 // ============================================================
 // CATALOGUE PRODUITS — LE DATTIER
 // Auto-genere par sync-produits.py — Ne pas modifier a la main
-// Source : produits.csv
+// Source : produits.json
 // ============================================================
 
 const products = [

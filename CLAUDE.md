@@ -10,8 +10,8 @@
 **Avant TOUTE livraison au propriétaire** (ZIP, commit, déploiement), exécuter :
 
 ```bash
-python3 sync-produits.py    # Sync CSV → JS + HTML + JSON-LD
-python3 check-projet.py     # Validation cohérence + SEO
+python3 sync-produits.py    # Sync JSON → JS + HTML + JSON-LD
+python3 check-projet.py     # Validation cohérence + SEO + README
 ```
 
 **Ne jamais livrer si `check-projet.py` retourne des erreurs (❌).**
@@ -23,44 +23,37 @@ Les warnings (⚠️) sont tolérables mais doivent être signalés au propriét
 **TOUJOURS.** Même si la modification semble anodine. Même si le propriétaire
 ne demande pas de vérification. Même si la modification ne touche pas les produits.
 
-Cas typiques où un oubli peut casser le site :
-- Le propriétaire modifie le CSV mais oublie de le mentionner
-- Un changement de texte dans index.html écrase accidentellement le bloc hidden
-- Un ajout de page sans canonical / OG / favicon
-- Un produit ajouté sans image
-- Une catégorie ajoutée sans bouton filtre
-
 ### Que vérifie check-projet.py ?
 
 **Cohérence produits :**
-- produits.csv ↔ products.js (même nombre, mêmes IDs)
-- produits.csv ↔ bloc hidden index.html (même nombre, mêmes prix)
-- produits.csv ↔ JSON-LD (même nombre)
-- Images produits existent (chaque chemin du CSV pointe vers un fichier réel)
-- Catégories CSV ↔ boutons filtres index.html
-- Pas de doublons d'ID dans le CSV
+- produits.json valide (JSON parseable, champs obligatoires, types corrects)
+- produits.json ↔ products.js (même nombre, mêmes IDs)
+- produits.json ↔ bloc hidden index.html (même nombre, mêmes prix)
+- produits.json ↔ JSON-LD (même nombre)
+- Images produits existent
+- Catégories JSON ↔ boutons filtres index.html
+- Pas de doublons d'ID
 
 **Conformité SEO :**
-- Chaque page HTML a : title (20-70 car.), meta description (80-165 car.), canonical, h1 unique, Open Graph, favicon, preconnect, ARIA, lang="fr"
-- Hiérarchie des headings correcte (pas de saut h1→h3)
-- Fichiers globaux présents : robots.txt, sitemap.xml, favicon.svg, 404.html
-- JSON-LD Organization + WebSite + ItemList dans index.html
-- JSON-LD FAQPage dans faq.html
+- Chaque page : title (20-70 car.), meta description (80-165 car.), canonical, h1 unique, Open Graph, favicon, preconnect, ARIA, lang="fr"
+- Hiérarchie headings correcte
+- Fichiers globaux : robots.txt, sitemap.xml, favicon.svg, 404.html
+- JSON-LD Organization + WebSite + ItemList + FAQPage
 - Scripts locaux en defer
+- Admin Decap CMS : index.html + config.yml présents
 
 **Cohérence README :**
-- Nombre de produits mentionné correspond au CSV
-- Toutes les catégories du CSV sont mentionnées
-- Tous les fichiers clés sont listés dans la structure
-- Toutes les pages HTML existantes apparaissent
+- Nombre de produits correspond au JSON
+- Catégories mentionnées
+- Fichiers clés listés
+- Pages HTML documentées
 
 ### Workflow complet de livraison
 
 ```
 1. Effectuer les modifications demandées
 2. Si produits touchés → python3 sync-produits.py
-3. Si structure du projet modifiée (ajout/suppression de fichier, page,
-   catégorie, changement de stack) → mettre à jour README.md
+3. Si structure du projet modifiée → mettre à jour README.md
 4. python3 check-projet.py
 5. Si erreurs → corriger et recommencer à l'étape 4
 6. Livrer (ZIP ou git add . && git commit && git push)
@@ -69,107 +62,142 @@ Cas typiques où un oubli peut casser le site :
 ### Quand mettre à jour README.md ?
 
 Le README est la vitrine du projet sur GitHub. Il doit rester synchronisé :
-- Ajout/suppression de fichier → mettre à jour la structure
-- Ajout/suppression de produit ou catégorie → mettre à jour le tableau catalogue
+- Ajout/suppression de fichier, page ou catégorie → mettre à jour la structure
+- Changement de nombre de produits → mettre à jour le tableau catalogue
 - Changement de stack ou outil → mettre à jour la section correspondante
-- Ajout d'une tâche restante → mettre à jour la todo list
 - Complétion d'une tâche → la cocher dans la todo list
-
-check-projet.py vérifie automatiquement :
-- Le nombre de produits dans le README correspond au CSV
-- Les catégories du CSV sont mentionnées dans le README
-- Les fichiers clés du projet sont listés dans le README
-- Les pages HTML existantes apparaissent dans le README
 
 ---
 
-## Structure du projet
+## Architecture
 
 ```
 le-dattier-project/
-├── produits.csv              <- SOURCE UNIQUE DES PRODUITS (modifier ici)
-├── sync-produits.py          <- Sync CSV → products.js + index.html + JSON-LD
-├── check-projet.py           <- Validation pré-livraison (cohérence + SEO)
+├── produits.json             <- SOURCE UNIQUE DES PRODUITS
+├── sync-produits.py          <- Sync JSON → products.js + index.html + JSON-LD
+├── check-projet.py           <- Validation pré-livraison
+├── admin/
+│   ├── index.html            <- Interface Decap CMS
+│   └── config.yml            <- Configuration champs/collections
 ├── index.html                <- Page d'accueil
-├── faq.html                  <- FAQ avec accordéon + JSON-LD FAQPage
+├── faq.html                  <- FAQ + JSON-LD FAQPage
 ├── livraison.html            <- Livraison & Retours
-├── cgv.html                  <- Conditions Générales de Vente
-├── mentions-legales.html     <- Mentions légales + Confidentialité
+├── cgv.html                  <- CGV
+├── mentions-legales.html     <- Mentions légales + RGPD
 ├── 404.html                  <- Page 404 personnalisée
-├── style.css                 <- Styles CSS (charte noir & or)
-├── snipcart-theme.css        <- Thème Snipcart (noir & or)
+├── style.css                 <- Charte graphique (noir & or)
+├── snipcart-theme.css        <- Thème Snipcart
 ├── products.js               <- AUTO-GÉNÉRÉ par sync-produits.py
-├── app.js                    <- Logique JS (filtres, panier, animations)
-├── favicon.svg               <- Favicon (D doré sur fond noir)
-├── robots.txt                <- Instructions crawlers
-├── sitemap.xml               <- Plan du site (5 pages)
-├── netlify.toml              <- Config Netlify (headers, cache, 404)
-├── .gitignore
+├── app.js                    <- Filtres, animations, panier
+├── favicon.svg
+├── robots.txt
+├── sitemap.xml
+├── netlify.toml              <- Build command + headers + cache + 404
 ├── images/
-│   ├── site/                 <- Images du site (hero, histoire, valeurs)
-│   └── produits/             <- Photos produits (classées par catégorie)
-│       ├── dattes/
-│       ├── savons/
-│       └── nigelle/
-├── CLAUDE.md                 <- Ce fichier (lu au démarrage par Claude Code)
-├── HISTORIQUE.md             <- Historique complet pour continuité inter-sessions
-└── README.md                 <- Guide utilisateur
+│   ├── site/
+│   └── produits/{dattes,savons,nigelle}/
+├── CLAUDE.md, HISTORIQUE.md, README.md
+└── .gitignore
 ```
 
 ---
 
 ## Gestion des produits
 
-### Source unique : produits.csv
+### Source unique : produits.json
 
-Seul fichier à modifier pour les produits. Tout le reste est auto-généré.
+Deux façons de modifier les produits :
 
-**Format :** UTF-8 avec BOM, séparateur point-virgule (;)
-**Colonnes :** id;nom;origine;categorie;description;prix;unite;badge;image;poids
+**Via l'admin web (Decap CMS) — méthode principale :**
+1. Aller sur `https://www.ledattier.fr/admin/`
+2. Se connecter (Netlify Identity)
+3. Modifier les produits via l'interface
+4. Cliquer "Publier"
+5. Decap CMS commit dans GitHub → Netlify rebuild avec `sync-produits.py` automatique
 
-Règles :
-- id : texte unique en kebab-case (ex: datte-medjool)
-- categorie : "dattes", "savons" ou "nigelle"
-- prix : nombre décimal avec point (ex: 18.90)
-- badge : "new", "best" ou vide
-- poids : entier en grammes
-- image : chemin relatif vers images/produits/[categorie]/[nom].jpg
+**Via le code (Claude Code / manuellement) :**
+1. Modifier `produits.json`
+2. `python3 sync-produits.py` → régénère products.js + bloc hidden + JSON-LD
+3. `python3 check-projet.py` → validation
+4. `git push` → Netlify rebuild
 
-### sync-produits.py
+### Ce que sync-produits.py régénère
 
-Après toute modification de produits.csv, lancer : `python3 sync-produits.py`
-
-Ce script met à jour automatiquement :
 1. **products.js** → catalogue JS pour l'affichage client
 2. **index.html bloc hidden** → validation prix par le crawler Snipcart
 3. **index.html JSON-LD** → données structurées produits pour Google
 
-⚠️ NE JAMAIS modifier products.js à la main — il sera écrasé par le script.
+⚠️ NE JAMAIS modifier products.js à la main — il sera écrasé.
+
+### Format de produits.json
+
+```json
+{
+  "produits": [
+    {
+      "id": "datte-medjool",
+      "nom": "Medjool Royale",
+      "origine": "Palestine",
+      "categorie": "dattes",
+      "description": "Charnue et généreuse, aux saveurs de caramel beurré.",
+      "prix": 24.50,
+      "unite": "500g",
+      "badge": "new",
+      "image": "images/produits/dattes/medjool.jpg",
+      "poids": 520
+    }
+  ]
+}
+```
+
+Règles :
+- id : texte unique en kebab-case
+- categorie : "dattes", "savons" ou "nigelle"
+- prix : nombre décimal (ex: 18.90)
+- badge : "new", "best" ou "" (vide)
+- poids : entier en grammes
+- image : chemin relatif vers images/produits/[categorie]/[nom].jpg
 
 ### Commandes fréquentes
 
-**Modifier un prix ou une description :**
-1. Modifier produits.csv → 2. sync-produits.py → 3. check-projet.py → 4. git push
+**Modifier un prix :** produits.json → sync → check → git push
+**Ajouter un produit :** photo + produits.json → sync → check → git push
+**Retirer un produit :** supprimer dans produits.json → sync → check → git push
+**Ajouter une catégorie :** dossier image + produits.json + bouton filtre dans index.html + option dans admin/config.yml → sync → check → git push
+**Ajouter une page HTML :** créer avec même head SEO + ajouter dans sitemap.xml → check → git push
 
-**Ajouter un produit :**
-1. Photo dans images/produits/[categorie]/[nom].jpg (kebab-case, 600x600px min)
-2. Nouvelle ligne dans produits.csv
-3. sync-produits.py → check-projet.py → git push
+---
 
-**Retirer un produit :**
-1. Supprimer la ligne dans produits.csv
-2. sync-produits.py → check-projet.py → git push
+## Admin Decap CMS
 
-**Ajouter une catégorie :**
-1. Créer images/produits/[nouvelle-categorie]/
-2. Ajouter les produits dans produits.csv
-3. Ajouter un bouton filter-btn dans index.html (data-cat="...")
-4. sync-produits.py → check-projet.py → git push
+### Fonctionnement
 
-**Ajouter une page HTML :**
-1. Créer le fichier avec le même head que les autres pages (canonical, OG, favicon, preconnect, ARIA)
-2. Ajouter l'URL dans sitemap.xml
-3. check-projet.py → git push
+- **Interface :** `/admin/` (Decap CMS hébergé côté client, pas de backend)
+- **Auth :** Netlify Identity (email/mot de passe)
+- **Storage :** Git Gateway (Decap commit directement dans le repo GitHub)
+- **Build :** Chaque commit déclenche Netlify → `python3 sync-produits.py` → déploiement
+
+### Configuration initiale (à faire une fois)
+
+1. Dans Netlify Dashboard → **Identity** → Activer
+2. Aller dans **Identity > Settings > Services > Git Gateway** → Activer
+3. Inviter l'admin par email (Identity > Invite users)
+4. L'admin reçoit un email, crée son mot de passe
+5. Se connecter sur `https://www.ledattier.fr/admin/`
+
+### Ajouter une catégorie dans l'admin
+
+Modifier `admin/config.yml`, section `categorie` :
+```yaml
+- name: "categorie"
+  widget: "select"
+  options:
+    - { label: "Dattes", value: "dattes" }
+    - { label: "Savons", value: "savons" }
+    - { label: "Huile de Nigelle", value: "nigelle" }
+    - { label: "Nouvelle catégorie", value: "nouveau" }  # ← ajouter ici
+```
+Et ajouter un bouton filtre dans index.html.
 
 ---
 
@@ -177,95 +205,44 @@ Ce script met à jour automatiquement :
 
 ### Pour chaque page HTML
 - `<title>` : 20-70 caractères, mots-clés pertinents
-- `<meta name="description">` : 80-165 caractères, descriptif et accrocheur
-- `<link rel="canonical">` : URL absolue de la page
-- `<link rel="icon">` : favicon.svg
-- `<link rel="preconnect">` : fonts.googleapis.com, fonts.gstatic.com, cdn.snipcart.com
-- Open Graph : og:type, og:title, og:description, og:url, og:locale (+ og:image sur index)
-- `<html lang="fr">`
-- 1 seul `<h1>` par page
-- Hiérarchie headings : h1 → h2 → h3 (jamais de saut)
-- Au moins 1 attribut `aria-label` sur la navigation
+- `<meta name="description">` : 80-165 caractères
+- `<link rel="canonical">` : URL absolue
+- Favicon, preconnect, Open Graph, lang="fr", 1 seul h1, hiérarchie correcte, ARIA
 
 ### Pour le site global
-- robots.txt : existe et pointe vers sitemap
-- sitemap.xml : contient toutes les pages publiques
-- favicon.svg : existe
-- 404.html : existe + redirect dans netlify.toml
-- JSON-LD Organization + WebSite + ItemList dans index.html
-- JSON-LD FAQPage dans faq.html
-- Scripts locaux en defer (pas de render-blocking)
-
-### Quand modifier le SEO ?
-- Ajout/suppression de page → mettre à jour sitemap.xml
-- Changement de produit → sync-produits.py régénère le JSON-LD automatiquement
-- Changement de contenu textuel → vérifier title et meta description
-- Ajout de FAQ → mettre à jour le JSON-LD FAQPage dans faq.html
+- robots.txt, sitemap.xml, favicon.svg, 404.html
+- JSON-LD (Organization, WebSite, ItemList, FAQPage)
+- Scripts en defer
+- Admin non indexé (robots.txt Disallow + meta noindex)
 
 ---
 
-## Snipcart (e-commerce)
+## Snipcart
 
-- Clé API dans toutes les pages HTML : `<div id="snipcart" data-api-key="...">`
-- Le crawler Snipcart valide les prix via le bloc `<div hidden>` dans index.html
-- Les prix dans products.js, le bloc hidden ET le JSON-LD doivent être identiques
-- sync-produits.py gère cette synchronisation automatiquement
-- Le compteur panier : `.snipcart-items-count`
-- Le bouton panier : `.snipcart-checkout`
-
----
+- Clé API dans les pages HTML : `<div id="snipcart" data-api-key="...">`
+- Validation prix via bloc `<div hidden>` (généré par sync-produits.py)
+- Compteur panier : `.snipcart-items-count` / Bouton : `.snipcart-checkout`
 
 ## Catégories
 
-Définies à **trois** endroits (sync-produits.py gère 2 sur 3 automatiquement) :
-1. ✅ produits.csv → source
+Définies à **quatre** endroits (sync gère 2/4 automatiquement) :
+1. ✅ produits.json → source
 2. ✅ products.js → auto-généré
-3. ⚠️ Boutons filtres dans index.html → **à ajouter manuellement** si nouvelle catégorie
-
----
+3. ⚠️ Boutons filtres dans index.html → manuel si nouvelle catégorie
+4. ⚠️ Options dans admin/config.yml → manuel si nouvelle catégorie
 
 ## Déploiement
 
 ```bash
-git add .
-git commit -m "description de la modification"
 git push
 ```
 
-Netlify détecte automatiquement le push et déploie en ~30 secondes.
-
----
-
-## Pages intérieures
-
-Toutes partagent : style.css, snipcart-theme.css, même nav, même footer, Snipcart.
-
-Classes CSS :
-- `.page-header` : en-tête avec titre et lien retour
-- `.page-content` : contenu principal (max-width 820px)
-- `.page-content h2` : sous-titres de section
-- `.faq-item / .faq-question / .faq-answer` : accordéon FAQ
-- `.back-home` : lien "← Retour à l'accueil"
-
-Les CGV et Mentions légales contiennent des [CROCHETS] à remplacer
-par les vraies informations de l'entreprise.
-
----
-
-## Images
-
-- Produits : 600x600px recommandé, format carré
-- Hero : 1600x900px
-- Story : 800x1067px (portrait 3:4)
-- Formats : JPG, PNG, WebP
-- Nommage : kebab-case, sans accents (ex: savon-alep-laurier.jpg)
-- Emplacement : images/produits/[categorie]/[nom].jpg
-
----
+Netlify exécute automatiquement `python3 sync-produits.py` puis déploie.
 
 ## Notes techniques
 
-- Snipcart valide les prix en crawlant la page HTML → bloc hidden obligatoire
-- data-item-url="/" dans app.js pointe vers la page d'accueil
-- Le site est responsive (breakpoint à 900px)
-- Les h4 du footer sont acceptables (hors hiérarchie du contenu principal)
+- Snipcart valide les prix en crawlant le bloc hidden
+- data-item-url="/" dans app.js pointe vers index.html
+- Le site est responsive (breakpoint 900px)
+- Les h4 du footer sont hors hiérarchie SEO
+- Netlify Identity widget chargé sur index.html pour la redirection admin

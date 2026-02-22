@@ -1,34 +1,38 @@
 #!/usr/bin/env python3
 """
 sync-produits.py — Le Dattier
-Lit produits.csv et met a jour :
+Lit produits.json et met a jour :
   1. products.js  (catalogue JS pour l'affichage)
   2. index.html   (bloc hidden pour Snipcart + JSON-LD SEO)
 
 Usage : python3 sync-produits.py
+
+Source : produits.json (edite via Decap CMS ou manuellement)
 """
 
-import csv
 import json
 import re
 import os
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-CSV_PATH = os.path.join(BASE, "produits.csv")
+JSON_PATH = os.path.join(BASE, "produits.json")
 JS_PATH = os.path.join(BASE, "products.js")
 HTML_PATH = os.path.join(BASE, "index.html")
 SITE_URL = "https://www.ledattier.fr"
 
 
-def read_csv():
-    """Lit produits.csv (UTF-8 avec ou sans BOM, separateur ;)."""
-    products = []
-    with open(CSV_PATH, "r", encoding="utf-8-sig") as f:
-        reader = csv.DictReader(f, delimiter=";")
-        for row in reader:
-            row["prix"] = float(row["prix"])
-            row["poids"] = int(row["poids"])
-            products.append(row)
+def read_products():
+    """Lit produits.json."""
+    with open(JSON_PATH, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    products = data.get("produits", [])
+    # Normaliser les types (Decap CMS peut envoyer des strings pour les nombres)
+    for p in products:
+        p["prix"] = float(p["prix"])
+        p["poids"] = int(p["poids"])
+        # S'assurer que badge est une string (jamais None)
+        if p.get("badge") is None:
+            p["badge"] = ""
     return products
 
 
@@ -38,7 +42,7 @@ def generate_products_js(products):
     lines.append("// ============================================================")
     lines.append("// CATALOGUE PRODUITS — LE DATTIER")
     lines.append("// Auto-genere par sync-produits.py — Ne pas modifier a la main")
-    lines.append("// Source : produits.csv")
+    lines.append("// Source : produits.json")
     lines.append("// ============================================================")
     lines.append("")
     lines.append("const products = [")
@@ -183,7 +187,6 @@ def update_index_html(hidden_html, jsonld_str):
     if re.search(pattern_jsonld, html, re.DOTALL):
         html = re.sub(pattern_jsonld, jsonld_block, html, flags=re.DOTALL)
     else:
-        # Inserer avant </head>
         html = html.replace('</head>', jsonld_block + '\n</head>')
 
     with open(HTML_PATH, "w", encoding="utf-8") as f:
@@ -191,8 +194,8 @@ def update_index_html(hidden_html, jsonld_str):
 
 
 def main():
-    print("Lecture de produits.csv...")
-    products = read_csv()
+    print("Lecture de produits.json...")
+    products = read_products()
     print(f"  {len(products)} produits trouves")
 
     cats = set(p["categorie"] for p in products)
@@ -216,7 +219,6 @@ def main():
     print("  OK index.html mis a jour (hidden + JSON-LD)")
 
     print(f"\nSynchronisation terminee -- {len(products)} produits")
-    print("  git add . && git commit -m 'maj produits' && git push")
 
 
 if __name__ == "__main__":
