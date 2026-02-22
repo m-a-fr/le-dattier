@@ -7,6 +7,12 @@
 
 ## ⚠️ RÈGLE ABSOLUE — CHECKLIST PRÉ-LIVRAISON
 
+**Avant TOUTE modification de fichier**, exécuter :
+
+```bash
+git pull                        # Récupérer les derniers changements (Decap CMS, collaborateurs)
+```
+
 **Avant TOUTE livraison au propriétaire** (ZIP, commit, déploiement), exécuter :
 
 ```bash
@@ -51,6 +57,7 @@ ne demande pas de vérification. Même si la modification ne touche pas les prod
 ### Workflow complet de livraison
 
 ```
+0. git pull                        ← TOUJOURS en premier (Decap CMS peut avoir modifié le repo)
 1. Effectuer les modifications demandées
 2. Si produits touchés → python3 sync-produits.py
 3. Si structure du projet modifiée → mettre à jour README.md
@@ -58,6 +65,15 @@ ne demande pas de vérification. Même si la modification ne touche pas les prod
 5. Si erreurs → corriger et recommencer à l'étape 4
 6. Livrer (ZIP ou git add . && git commit && git push)
 ```
+
+### Pourquoi git pull en premier ?
+
+Decap CMS commit directement dans GitHub quand le propriétaire modifie
+les produits via l'admin web. Si Claude Code modifie des fichiers locaux
+sans pull préalable, il risque de :
+- Écraser un changement de prix fait via l'admin
+- Créer un conflit Git au moment du push
+- Travailler sur un produits.json obsolète
 
 ### Quand mettre à jour README.md ?
 

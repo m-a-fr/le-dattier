@@ -152,6 +152,7 @@ Typographies :
 Avant toute livraison (ZIP, commit, déploiement), cette séquence est obligatoire :
 
 ```bash
+git pull                        # Récupérer les changements distants (Decap CMS, collaborateurs)
 python3 sync-produits.py    # Régénère products.js + bloc hidden + JSON-LD depuis produits.json
 python3 check-projet.py     # Vérifie cohérence produits + conformité SEO + README
 ```

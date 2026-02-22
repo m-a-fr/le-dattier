@@ -86,6 +86,7 @@ L'interface d'administration est accessible sur `/admin/`. Elle permet de modifi
 Le catalogue est stocké dans **`produits.json`**. Après modification :
 
 ```bash
+git pull                          # Récupérer les changements (Decap CMS, collaborateurs)
 python3 sync-produits.py      # Régénère products.js + HTML + JSON-LD
 python3 check-projet.py       # Validation pré-livraison
 git add . && git commit -m "description" && git push
