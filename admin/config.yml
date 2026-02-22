@@ -76,12 +76,14 @@ collections:
                   - { label: "Nouveau", value: "new" }
                   - { label: "Best-seller", value: "best" }
                 default: ""
+                required: false
 
               - name: "image"
                 label: "Photo produit"
                 widget: "image"
                 hint: "Format carré recommandé (600x600px min)"
                 choose_url: false
+                required: false
 
               - name: "poids"
                 label: "Poids (grammes)"
