@@ -95,6 +95,20 @@ nav.scrolled {
   transition: opacity 0.3s;
 }
 .nav-cart:hover { opacity: 0.8; }
+
+/* Flèche retour — cachée par défaut, visible sur mobile quand le panier est ouvert */
+.nav-back {
+  display: none;
+  align-items: center; justify-content: center;
+  background: none; border: none;
+  color: var(--gold); cursor: pointer;
+  padding: 0.25rem;
+  transition: opacity 0.2s;
+}
+.nav-back:hover { opacity: 0.7; }
+@media (max-width: 900px) {
+  nav.cart-open .nav-back { display: flex; }
+}
 .cart-count {
   background: var(--gold); color: var(--noir);
   width: 22px; height: 22px; border-radius: 50%;

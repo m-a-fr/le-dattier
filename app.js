@@ -72,14 +72,19 @@ document.addEventListener('snipcart.ready', () => {
     showToast(`${item.name} ajouté au panier`);
   });
 
-  // Le navbar fixe (z-index 100) masque l'en-tête natif du panier sur mobile.
-  // On l'abaisse temporairement pendant que le panier est ouvert.
+  // Flèche retour mobile : apparaît à gauche du logo quand le panier est ouvert
   const navbar = document.getElementById('navbar');
+  const navBack = document.getElementById('navBack');
+
   Snipcart.events.on('cart.opened', () => {
-    if (navbar) navbar.style.zIndex = '0';
+    navbar.classList.add('cart-open');
   });
   Snipcart.events.on('cart.closed', () => {
-    if (navbar) navbar.style.zIndex = '';
+    navbar.classList.remove('cart-open');
+  });
+
+  navBack.addEventListener('click', () => {
+    Snipcart.api.theme.cart.close();
   });
 });
 
