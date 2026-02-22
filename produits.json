@@ -167,6 +167,17 @@
       "image": "images/produits/nigelle/coffret.jpg",
       "description": "Huile pure 100ml + capsules 60 + savon nigelle. Le rituel complet.",
       "origine": "Égypte"
+    },
+    {
+      "unite": "10g",
+      "badge": "",
+      "nom": "Foin de l'Atlas",
+      "prix": 3.5,
+      "categorie": "savons",
+      "poids": 10,
+      "id": "foin-atals",
+      "description": "Superbe foin",
+      "origine": "Maroc"
     }
   ]
 }
