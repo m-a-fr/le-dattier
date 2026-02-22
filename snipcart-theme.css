@@ -310,38 +310,3 @@
 #snipcart .snipcart__loading-overlay {
   background: rgba(14, 13, 11, 0.85);
 }
-
-/* -----------------
-    BOUTON "RETOUR À LA BOUTIQUE"
-    Injecté par app.js sous l'en-tête du panier
------------------ */
-.ld-back-to-shop {
-  display: flex;
-  align-items: center;
-  gap: 0.4em;
-  width: 100%;
-  padding: 0.65rem 1.25rem;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(212, 180, 114, 0.08);
-  color: #D4B472;
-  font-family: 'Jost', sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  text-align: left;
-}
-
-.ld-back-to-shop:hover,
-.ld-back-to-shop:focus {
-  background: rgba(212, 180, 114, 0.06);
-  color: #E8D9B5;
-  outline: none;
-}
-
-.ld-back-to-shop:focus-visible {
-  outline: 2px solid rgba(212, 180, 114, 0.4);
-  outline-offset: -2px;
-}

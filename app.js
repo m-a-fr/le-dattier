@@ -72,26 +72,14 @@ document.addEventListener('snipcart.ready', () => {
     showToast(`${item.name} ajouté au panier`);
   });
 
-  // ========================
-  // BOUTON "RETOUR À LA BOUTIQUE"
-  // Injecté dans le panier Snipcart (absent nativement sur mobile)
-  // ========================
-  function injectBackToShopButton() {
-    if (document.querySelector('.ld-back-to-shop')) return;
-
-    const header = document.querySelector('.snipcart-cart-header');
-    if (!header) return;
-
-    const btn = document.createElement('button');
-    btn.className = 'ld-back-to-shop';
-    btn.setAttribute('aria-label', 'Retour à la boutique');
-    btn.innerHTML = '<span aria-hidden="true">&#8592;</span> Continuer mes achats';
-    btn.addEventListener('click', () => Snipcart.api.theme.cart.close());
-    header.insertAdjacentElement('afterend', btn);
-  }
-
+  // Le navbar fixe (z-index 100) masque l'en-tête natif du panier sur mobile.
+  // On l'abaisse temporairement pendant que le panier est ouvert.
+  const navbar = document.getElementById('navbar');
   Snipcart.events.on('cart.opened', () => {
-    setTimeout(injectBackToShopButton, 80);
+    if (navbar) navbar.style.zIndex = '0';
+  });
+  Snipcart.events.on('cart.closed', () => {
+    if (navbar) navbar.style.zIndex = '';
   });
 });
 
