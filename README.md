@@ -156,6 +156,7 @@ Claude Code lit `CLAUDE.md` au démarrage et applique automatiquement le workflo
 - [ ] Mettre à jour les URLs (sitemap, canonical, OG) avec le domaine final
 - [ ] Activer Netlify Identity + Git Gateway
 - [ ] Inviter l'admin dans Netlify Identity
+- [ ] Flèche retour mobile dans le cart — code en place, à valider en prod avec la clé Snipcart live
 - [ ] Ajouter un menu burger mobile
 - [ ] Brancher la newsletter
 - [ ] Analytics RGPD-friendly (Plausible, Matomo…)

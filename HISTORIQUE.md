@@ -205,7 +205,7 @@ Le propriétaire peut avoir modifié le JSON via l'admin web sans le mentionner.
 - [ ] Inviter l'admin par email (Identity > Invite users)
 
 ### Améliorations possibles
-- [ ] Ajouter un menu burger pour mobile (actuellement les liens nav sont cachés sous 900px)
+- [ ] Flèche retour mobile dans le cart Snipcart — code en place (MutationObserver + `.snipcart-modal__close`), à valider une fois le site déployé avec la clé live (les events/classes Snipcart sont inactifs en mode test)
 - [ ] Brancher la newsletter (Mailchimp, Brevo, ou autre)
 - [x] ~~Ajouter des métadonnées Open Graph / Twitter Cards~~ (fait)
 - [ ] Optimiser les images (compression, format WebP, lazy loading déjà en place)
@@ -300,6 +300,17 @@ Le propriétaire peut avoir modifié le JSON via l'admin web sans le mentionner.
   - `sync-produits.py` relancé → products.js + bloc hidden + JSON-LD remis à 13 produits
   - `check-projet.py` : 0 erreur, 0 warning après correction
   - README.md, HISTORIQUE.md mis à jour pour refléter l'état réel du repo
+
+### Session 6 (22/02/2026)
+- **Tentative : bouton "retour à la boutique" sur mobile dans le cart Snipcart**
+  - Problème identifié : le navbar fixe (`z-index: 100`) masque l'en-tête natif Snipcart sur mobile, cachant le lien de fermeture natif
+  - Approche 1 abandonnée : injection d'un bouton via `Snipcart.events.on('cart.opened')` → les events Snipcart ne se déclenchent pas sans clé live
+  - Approche 2 abandonnée : abaissement du `z-index` navbar via events Snipcart → même problème
+  - Approche 3 abandonnée : `html.snipcart-active` en CSS pur → la classe n'est pas ajoutée par Snipcart en mode test
+  - Approche 4 en cours (non résolue) : MutationObserver sur `<html>` + clic sur `.snipcart-modal__close` → fonctionne en simulation locale mais pas en prod
+  - Conclusion : les events et classes Snipcart semblent inactifs en mode test (sans clé live + domaine configuré). À tester une fois le site déployé avec la vraie clé.
+  - Code en place dans `app.js` et `style.css`, prévisualisation validée (`preview-navbar-mobile.html`)
+  - HISTORIQUE.md mis à jour
 
 ---
 
