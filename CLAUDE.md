@@ -21,7 +21,17 @@ le-dattier-project/
 
 ## Où modifier les produits
 
-FICHIER : products.js
+FICHIER PRINCIPAL : products.js
+FICHIER SECONDAIRE : index.html (section hidden pour le crawler Snipcart)
+
+⚠️ IMPORTANT : Les produits sont définis à DEUX endroits :
+1. products.js → affiché au client (rendu par app.js)
+2. index.html → bloc <div hidden> avec des boutons snipcart-add-item
+   (utilisé par le crawler Snipcart pour valider les prix)
+
+Quand on modifie un prix, un nom, ou qu'on ajoute/retire un produit,
+il faut TOUJOURS modifier les deux fichiers pour qu'ils restent synchronisés.
+Sinon Snipcart refuse la commande ("le prix a changé").
 
 Chaque produit a cette structure :
 
