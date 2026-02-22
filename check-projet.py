@@ -334,6 +334,60 @@ def check_seo():
 
 
 # ============================================================
+# 3. COHÉRENCE README
+# ============================================================
+def check_readme():
+    print("\n═══ COHÉRENCE README ═══")
+
+    readme = read_file("README.md")
+    if readme is None:
+        err("README.md introuvable")
+        return
+
+    ok("README.md présent")
+
+    # Vérifier que le nombre de produits mentionné est correct
+    csv_path = os.path.join(BASE, "produits.csv")
+    if os.path.exists(csv_path):
+        with open(csv_path, "r", encoding="utf-8-sig") as f:
+            reader = csv.DictReader(f, delimiter=";")
+            csv_products = list(reader)
+        csv_count = len(csv_products)
+        csv_cats = set(p["categorie"] for p in csv_products)
+
+        # Vérifier le compte total
+        count_match = re.search(r'(\d+)\s*produits?\s*(?:répartis|au total|dans)', readme)
+        if count_match:
+            readme_count = int(count_match.group(1))
+            if readme_count != csv_count:
+                warn(f"README mentionne {readme_count} produits, CSV en a {csv_count}")
+            else:
+                ok(f"Nombre de produits dans README ({readme_count}) = CSV")
+        else:
+            warn("Impossible de vérifier le nombre de produits dans README")
+
+        # Vérifier que toutes les catégories sont mentionnées
+        for cat in csv_cats:
+            if cat.lower() not in readme.lower():
+                warn(f"Catégorie '{cat}' absente du README")
+
+    # Vérifier que les fichiers clés sont mentionnés
+    key_files = ["produits.csv", "sync-produits.py", "check-projet.py", "index.html",
+                 "products.js", "sitemap.xml", "robots.txt", "favicon.svg"]
+    missing_mentions = [f for f in key_files if f not in readme]
+    if missing_mentions:
+        warn(f"Fichiers non mentionnés dans README : {missing_mentions}")
+    else:
+        ok("Tous les fichiers clés mentionnés dans README")
+
+    # Vérifier que les pages HTML existantes sont cohérentes avec la structure documentée
+    actual_html = sorted([f for f in os.listdir(BASE) if f.endswith('.html')])
+    for f in actual_html:
+        if f not in readme:
+            warn(f"Page {f} existe mais n'est pas dans le README")
+
+
+# ============================================================
 # 3. RAPPORT
 # ============================================================
 def main():
@@ -344,6 +398,7 @@ def main():
 
     check_products()
     check_seo()
+    check_readme()
 
     print("\n" + "═" * 44)
     print(f"  Erreurs  : {len(ERRORS)}")

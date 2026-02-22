@@ -48,15 +48,38 @@ Cas typiques où un oubli peut casser le site :
 - JSON-LD FAQPage dans faq.html
 - Scripts locaux en defer
 
+**Cohérence README :**
+- Nombre de produits mentionné correspond au CSV
+- Toutes les catégories du CSV sont mentionnées
+- Tous les fichiers clés sont listés dans la structure
+- Toutes les pages HTML existantes apparaissent
+
 ### Workflow complet de livraison
 
 ```
 1. Effectuer les modifications demandées
 2. Si produits touchés → python3 sync-produits.py
-3. python3 check-projet.py
-4. Si erreurs → corriger et recommencer à l'étape 3
-5. Livrer (ZIP ou git add . && git commit && git push)
+3. Si structure du projet modifiée (ajout/suppression de fichier, page,
+   catégorie, changement de stack) → mettre à jour README.md
+4. python3 check-projet.py
+5. Si erreurs → corriger et recommencer à l'étape 4
+6. Livrer (ZIP ou git add . && git commit && git push)
 ```
+
+### Quand mettre à jour README.md ?
+
+Le README est la vitrine du projet sur GitHub. Il doit rester synchronisé :
+- Ajout/suppression de fichier → mettre à jour la structure
+- Ajout/suppression de produit ou catégorie → mettre à jour le tableau catalogue
+- Changement de stack ou outil → mettre à jour la section correspondante
+- Ajout d'une tâche restante → mettre à jour la todo list
+- Complétion d'une tâche → la cocher dans la todo list
+
+check-projet.py vérifie automatiquement :
+- Le nombre de produits dans le README correspond au CSV
+- Les catégories du CSV sont mentionnées dans le README
+- Les fichiers clés du projet sont listés dans le README
+- Les pages HTML existantes apparaissent dans le README
 
 ---
 
