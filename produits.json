@@ -61,18 +61,6 @@
       "origine": "Iran"
     },
     {
-      "unite": "coffret",
-      "badge": "new",
-      "nom": "Coffret Découverte Dattes",
-      "prix": 45,
-      "categorie": "dattes",
-      "poids": 800,
-      "id": "datte-coffret",
-      "image": "images/produits/dattes/coffret.jpg",
-      "description": "5 variétés d'exception réunies dans un coffret cadeau élégant.",
-      "origine": "Multi-origines"
-    },
-    {
       "unite": "200g",
       "badge": "best",
       "nom": "Savon d'Alep au Laurier",
@@ -167,17 +155,6 @@
       "image": "images/produits/nigelle/coffret.jpg",
       "description": "Huile pure 100ml + capsules 60 + savon nigelle. Le rituel complet.",
       "origine": "Égypte"
-    },
-    {
-      "unite": "10g",
-      "badge": "new",
-      "nom": "Foin de l'atlas",
-      "prix": 6.5,
-      "categorie": "savons",
-      "poids": 10,
-      "id": "foin-atlas",
-      "description": "Le foin de l'atlas",
-      "origine": "Maroc"
     }
   ]
 }
